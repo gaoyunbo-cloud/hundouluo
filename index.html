@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>魂斗罗：铁血重装版 CONTRA: SHATTERED OPS HD (720P 跨网联机版)</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div class="arcade-shell">
+    <!-- Top Tactical Bar & 5-Stage Quick Selector -->
+    <header class="top-bar">
+      <div class="brand">
+        <span class="brand-badge">720P HD · ONLINE CO-OP</span>
+        <span class="brand-title">魂斗罗：铁血重装版 CONTRA: SHATTERED OPS</span>
+      </div>
+
+      <div class="toolbar">
+        <div class="stage-group">
+          <span class="stage-label">速跳战区:</span>
+          <button class="arcade-btn stage-btn active" data-stage="1" type="button" title="第一关：热带雨林">1 雨林</button>
+          <button class="arcade-btn stage-btn" data-stage="2" type="button" title="第二关：赛博基地">2 赛博</button>
+          <button class="arcade-btn stage-btn" data-stage="3" type="button" title="第三关：极寒雪原">3 雪原</button>
+          <button class="arcade-btn stage-btn" data-stage="4" type="button" title="第四关：熔岩地心">4 熔岩</button>
+          <button class="arcade-btn stage-btn" data-stage="5" type="button" title="第五关：异形母巢">5 终局</button>
+        </div>
+
+        <button id="btnNetplay" class="arcade-btn netplay-btn" type="button">🌐 异地联机大厅 (O)</button>
+        <button id="btnTouch" class="arcade-btn" type="button">📱 触屏手柄</button>
+        <button id="btnKonami" class="arcade-btn" type="button">★ 30命秘籍</button>
+        <button id="btnMute" class="arcade-btn active" type="button">音效: 开</button>
+        <button id="btnFullscreen" class="arcade-btn" type="button">全屏</button>
+        <button id="btnRestart" class="arcade-btn" type="button">主菜单 (R)</button>
+      </div>
+    </header>
+
+    <!-- Full HD 1280x720 Canvas + Optional Mobile Virtual Gamepad -->
+    <main class="crt-frame" id="crtContainer">
+      <div class="screen-wrap">
+        <canvas id="gameCanvas" width="1280" height="720"></canvas>
+
+        <!-- Touch Virtual Controls for Mobile 4G/5G Cross-Network Play -->
+        <div id="touchControls" class="touch-controls hidden">
+          <div class="dpad-cluster">
+            <button class="t-btn dpad-up" data-touch="up" type="button">▲</button>
+            <button class="t-btn dpad-down" data-touch="down" type="button">▼</button>
+            <button class="t-btn dpad-left" data-touch="left" type="button">◀</button>
+            <button class="t-btn dpad-right" data-touch="right" type="button">▶</button>
+          </div>
+
+          <div class="action-cluster">
+            <button class="t-btn" data-touch="swap" type="button">切枪</button>
+            <button class="t-btn" data-touch="grenade" type="button">手雷</button>
+            <button class="t-btn" data-touch="dash" type="button">冲刺</button>
+            <button class="t-btn" data-touch="fire" type="button">开火</button>
+            <button class="t-btn" data-touch="jump" type="button">跳跃</button>
+            <button class="t-btn" id="btnTouchCallout" type="button">信号!</button>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Tactical Moves & Upgradable Arsenal Legend -->
+    <section class="info-panel">
+      <div class="info-card">
+        <div>
+          <strong>单人 / 异地联机本机操作（房主 1P 与客机 2P 均用同一套顺手键位）：</strong>
+          <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> 八向瞄准 ·
+          <kbd>J</kbd> 射击 ·
+          <kbd>K</kbd>/<kbd>Space</kbd> 跳跃 ·
+          <kbd>L</kbd>/<kbd>Shift</kbd> <strong>无敌冲刺</strong> ·
+          <kbd>I</kbd>/<kbd>U</kbd> <strong>手雷</strong> ·
+          <kbd>Q</kbd> <strong>切枪</strong> ·
+          <kbd>O</kbd> <strong>跨网联机大厅</strong>
+        </div>
+        <div>
+          <strong>同机双人键盘 2P：</strong>
+          <kbd>↑</kbd><kbd>↓</kbd><kbd>←</kbd><kbd>→</kbd> 瞄准 ·
+          <kbd>1</kbd> 射击 · <kbd>2</kbd> 跳跃 · <kbd>3</kbd> 冲刺 · <kbd>4</kbd> 手雷 · <kbd>0</kbd> 切枪 ·
+          <strong>战术提示：</strong>防暴盾兵可用<strong>手雷 / 冲刺绕后 / 激光穿透 / 引爆油桶</strong>破防！
+        </div>
+      </div>
+
+      <div class="info-card">
+        <div>
+          <strong>双槽可升级武器库（重复拾取升至 Lv.2★ MAX）：</strong>
+          <span class="tag tag-m">M</span>火神加特林
+          <span class="tag tag-s">S</span>七向散弹炮
+          <span class="tag tag-l">L</span>穿盾电磁炮
+          <span class="tag tag-f">F</span>凝固汽油弹
+          <span class="tag tag-c">C</span>蜂群追踪导弹
+        </div>
+        <div>
+          <strong>特战补给 & 联机支援：</strong>
+          <span class="tag tag-g">💣</span>手雷+护甲修复 ·
+          <span class="tag tag-l">B</span>等离子护盾 ·
+          <span class="tag tag-m">★</span>战术核弹 ·
+          阵亡后可<strong>借命复活</strong> · 秘籍 <kbd>↑↑↓↓←→←→BA</kbd>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Cross-Network Online Co-op Lobby Modal -->
+  <div id="netplayModal" class="modal-backdrop hidden" role="dialog" aria-modal="true">
+    <div class="lobby-modal">
+      <div class="lobby-header">
+        <h2>🌐 跨网络实时双人联机大厅 (异地 Wi-Fi / 4G / 5G 同玩)</h2>
+        <button id="btnCloseLobby" class="close-btn" type="button">✕ 关闭 (Esc)</button>
+      </div>
+
+      <div class="transport-bar">
+        <label for="transportSelect"><strong>联机传输引擎：</strong></label>
+        <select id="transportSelect">
+          <option value="auto">⚡ 智能自动选择 (有服务器走中继 / 静态页走云端 P2P)</option>
+          <option value="p2p">☁️ 云端 WebRTC P2P 直连 (免部署服务器 · 6位码穿透)</option>
+          <option value="ws">🚀 WebSocket 房间中继服务器 (100% 穿透对称 NAT / 5G)</option>
+        </select>
+        <input id="wsUrlInput" type="text" placeholder="可选：自定义中继地址 (如 wss://xxx.lhr.life/ws)" />
+      </div>
+
+      <div class="lobby-grid">
+        <!-- Host Card -->
+        <div class="lobby-card">
+          <h3>👑 我当房主 · 操控 1P 比尔 (Bill)</h3>
+          <p>生成 6 位房间码或一键复制邀请链接发给异地好友（不在同一 Wi-Fi 也可直连），队友加入后自动开启双人战役！</p>
+          <div id="roomCodeDisplay" class="room-code-box">------</div>
+          <button id="btnCreateRoom" class="primary-btn" type="button">⚡ 创建 6 位跨网房间</button>
+          <button id="btnCopyLink" class="arcade-btn" type="button">📋 复制一键联机邀请链接</button>
+        </div>
+
+        <!-- Guest Card -->
+        <div class="lobby-card">
+          <h3>🤝 加入好友 · 操控 2P 兰斯 (Lance)</h3>
+          <p>输入房主发来的 6 位数字房间码立即空降参战！联机时你在自己设备上同样使用顺手的 WASD+J/K/L 或触屏手柄。</p>
+          <input id="joinCodeInput" class="code-input" type="text" inputmode="numeric" maxlength="6" placeholder="输入6位码" />
+          <button id="btnJoinRoom" class="primary-btn green" type="button">🎮 立即加入房间并肩作战</button>
+          <div style="font-size: 11px; color: #94a3b8; text-align: center;">
+            提示：双方请保持相同的传输模式（同为自动/中继 或 同为云端 P2P）
+          </div>
+        </div>
+      </div>
+
+      <div class="status-banner">
+        <span id="netplayStatusText">📡 状态：未连接（当前为本机游玩模式）</span>
+        <div class="callout-row">
+          <button class="arcade-btn callout-btn" data-callout="掩护我!" type="button">📣 掩护我!</button>
+          <button class="arcade-btn callout-btn" data-callout="冲锋推进!" type="button">🔥 冲锋!</button>
+          <button class="arcade-btn callout-btn" data-callout="武器给你!" type="button">🎁 让枪!</button>
+          <button class="arcade-btn callout-btn" data-callout="干得漂亮!" type="button">👍 漂亮!</button>
+          <button id="btnDisconnect" class="arcade-btn" type="button">断开连接</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script src="js/audio.js"></script>
+  <script src="js/input.js"></script>
+  <script src="js/particles.js"></script>
+  <script src="js/sprites.js"></script>
+  <script src="js/level.js"></script>
+  <script src="js/entities.js"></script>
+  <script src="js/bosses.js"></script>
+  <script src="js/player.js"></script>
+  <script src="js/netplay.js"></script>
+  <script src="js/game.js"></script>
+
+  <script>
+    (function () {
+      var canvas = document.getElementById('gameCanvas');
+      var netplay = window.Contra.netplay;
+      var game = new window.Contra.Game(canvas);
+      window.Contra.game = game;
+      game.init();
+
+      var btnKonami = document.getElementById('btnKonami');
+      var btnMute = document.getElementById('btnMute');
+      var btnFullscreen = document.getElementById('btnFullscreen');
+      var btnRestart = document.getElementById('btnRestart');
+      var btnNetplay = document.getElementById('btnNetplay');
+      var btnTouch = document.getElementById('btnTouch');
+      var crtContainer = document.getElementById('crtContainer');
+      var touchControls = document.getElementById('touchControls');
+      var stageBtns = document.querySelectorAll('.stage-btn');
+
+      // Lobby DOM
+      var netplayModal = document.getElementById('netplayModal');
+      var btnCloseLobby = document.getElementById('btnCloseLobby');
+      var transportSelect = document.getElementById('transportSelect');
+      var wsUrlInput = document.getElementById('wsUrlInput');
+      var roomCodeDisplay = document.getElementById('roomCodeDisplay');
+      var btnCreateRoom = document.getElementById('btnCreateRoom');
+      var btnCopyLink = document.getElementById('btnCopyLink');
+      var joinCodeInput = document.getElementById('joinCodeInput');
+      var btnJoinRoom = document.getElementById('btnJoinRoom');
+      var netplayStatusText = document.getElementById('netplayStatusText');
+      var btnDisconnect = document.getElementById('btnDisconnect');
+      var calloutBtns = document.querySelectorAll('.callout-btn');
+      var autoCloseTimer = null;
+
+      window.openNetplayLobby = function () {
+        netplayModal.classList.remove('hidden');
+      };
+
+      function closeNetplayLobby() {
+        netplayModal.classList.add('hidden');
+      }
+
+      btnNetplay.addEventListener('click', function () {
+        btnNetplay.blur();
+        window.Contra.audio.init();
+        window.openNetplayLobby();
+      });
+
+      btnCloseLobby.addEventListener('click', closeNetplayLobby);
+      netplayModal.addEventListener('click', function (e) {
+        if (e.target === netplayModal) closeNetplayLobby();
+      });
+      window.addEventListener('keydown', function (e) {
+        if (e.code === 'Escape' && !netplayModal.classList.contains('hidden')) {
+          closeNetplayLobby();
+        }
+      });
+
+      // Live Netplay Status UI Sync
+      netplay.onStatusChange = function (info) {
+        var pingTag = info.active && info.rttMs ? ' · 延迟 ' + info.rttMs + 'ms' : '';
+        var modeTag = info.transport === 'ws' ? ' [WS中继]' : (info.transport === 'p2p' ? ' [云端P2P]' : '');
+        netplayStatusText.textContent = '📡 ' + info.text + modeTag + pingTag;
+
+        if (info.roomCode) {
+          roomCodeDisplay.textContent = info.roomCode;
+        } else {
+          roomCodeDisplay.textContent = '------';
+        }
+
+        if (info.active) {
+          btnNetplay.classList.add('connected');
+          btnNetplay.textContent = '🟢 联机中 ' + info.roomCode + (info.rttMs ? ' (' + info.rttMs + 'ms)' : '');
+          if (!autoCloseTimer && !netplayModal.classList.contains('hidden')) {
+            autoCloseTimer = setTimeout(function () {
+              closeNetplayLobby();
+              autoCloseTimer = null;
+            }, 650);
+          }
+        } else {
+          btnNetplay.classList.remove('connected');
+          btnNetplay.textContent = info.status === 'waiting'
+            ? '🟡 待加入: ' + info.roomCode
+            : '🌐 异地联机大厅 (O)';
+        }
+      };
+
+      btnCreateRoom.addEventListener('click', function () {
+        window.Contra.audio.init();
+        netplay.createRoom(transportSelect.value, wsUrlInput.value);
+      });
+
+      btnJoinRoom.addEventListener('click', function () {
+        window.Contra.audio.init();
+        netplay.joinRoom(joinCodeInput.value, transportSelect.value, wsUrlInput.value);
+      });
+
+      joinCodeInput.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') {
+          window.Contra.audio.init();
+          netplay.joinRoom(joinCodeInput.value, transportSelect.value, wsUrlInput.value);
+        }
+      });
+
+      btnCopyLink.addEventListener('click', function () {
+        if (!netplay.roomCode) {
+          netplayStatusText.textContent = '⚠️ 请先点击“创建 6 位跨网房间”再复制链接';
+          return;
+        }
+        var link = netplay.getInviteLink();
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(link).then(function () {
+            btnCopyLink.textContent = '✅ 已复制邀请链接!';
+            setTimeout(function () { btnCopyLink.textContent = '📋 复制一键联机邀请链接'; }, 2000);
+          }).catch(function () {
+            window.prompt('复制以下联机链接发给好友：', link);
+          });
+        } else {
+          window.prompt('复制以下联机链接发给好友：', link);
+        }
+      });
+
+      btnDisconnect.addEventListener('click', function () {
+        netplay.disconnect('已手动断开联机');
+      });
+
+      calloutBtns.forEach(function (b) {
+        b.addEventListener('click', function () {
+          var txt = b.getAttribute('data-callout');
+          netplay.sendCallout(txt);
+          closeNetplayLobby();
+        });
+      });
+
+      // Touch Virtual Gamepad Binding (Mobile / Tablet Cross-Network Play)
+      function setTouchVisible(show) {
+        touchControls.classList.toggle('hidden', !show);
+        btnTouch.classList.toggle('active', show);
+      }
+
+      if (window.matchMedia && window.matchMedia('(pointer: coarse)').matches) {
+        setTouchVisible(true);
+      }
+
+      btnTouch.addEventListener('click', function () {
+        btnTouch.blur();
+        setTouchVisible(touchControls.classList.contains('hidden'));
+      });
+
+      var touchMapBtns = touchControls.querySelectorAll('[data-touch]');
+      touchMapBtns.forEach(function (tb) {
+        var key = tb.getAttribute('data-touch');
+        function press(e) {
+          e.preventDefault();
+          window.Contra.audio.init();
+          window.Contra.input.touch[key] = true;
+          tb.classList.add('pressed');
+        }
+        function release(e) {
+          e.preventDefault();
+          window.Contra.input.touch[key] = false;
+          tb.classList.remove('pressed');
+        }
+        tb.addEventListener('pointerdown', press);
+        tb.addEventListener('pointerup', release);
+        tb.addEventListener('pointercancel', release);
+        tb.addEventListener('pointerleave', release);
+      });
+
+      var calloutCycle = ['掩护我!', '冲锋推进!', '武器给你!', '干得漂亮!'];
+      var calloutIdx = 0;
+      document.getElementById('btnTouchCallout').addEventListener('pointerdown', function (e) {
+        e.preventDefault();
+        window.Contra.audio.init();
+        netplay.sendCallout(calloutCycle[calloutIdx % calloutCycle.length]);
+        calloutIdx++;
+      });
+
+      // Stage Selector, Konami, Audio & Fullscreen
+      window.highlightStageBtn = function (stageNum) {
+        stageBtns.forEach(function (b) {
+          b.classList.toggle('active', parseInt(b.getAttribute('data-stage'), 10) === stageNum);
+        });
+      };
+
+      stageBtns.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          btn.blur();
+          window.Contra.audio.init();
+          if (netplay.isGuest()) {
+            netplay.sendCallout('请求跳关: 第' + btn.getAttribute('data-stage') + '关!');
+            return;
+          }
+          var st = parseInt(btn.getAttribute('data-stage'), 10);
+          game.jumpToStage(st);
+        });
+      });
+
+      window.updateKonamiBadge = function (on) {
+        if (on) {
+          btnKonami.textContent = '★ 30命已激活!';
+          btnKonami.classList.add('konami-on');
+        }
+      };
+
+      btnKonami.addEventListener('click', function () {
+        btnKonami.blur();
+        window.Contra.audio.init();
+        if (netplay.isGuest()) netplay.requestKonami();
+        else game.activateKonami();
+      });
+
+      btnMute.addEventListener('click', function () {
+        btnMute.blur();
+        window.Contra.audio.init();
+        var muted = window.Contra.audio.toggleMute();
+        btnMute.classList.toggle('active', !muted);
+        btnMute.textContent = muted ? '音效: 静音' : '音效: 开';
+      });
+
+      btnFullscreen.addEventListener('click', function () {
+        btnFullscreen.blur();
+        if (!document.fullscreenElement) {
+          (crtContainer.requestFullscreen || crtContainer.webkitRequestFullscreen).call(crtContainer);
+        } else if (document.exitFullscreen) {
+          document.exitFullscreen();
+        }
+      });
+
+      btnRestart.addEventListener('click', function () {
+        btnRestart.blur();
+        if (netplay.isGuest()) {
+          window.openNetplayLobby();
+          return;
+        }
+        window.Contra.audio.stopBGM();
+        game.state = 'title';
+        if (netplay.isHost()) netplay.broadcastWorldSnapshot(game);
+      });
+
+      // Auto-join from shared invite URL (?room=123456&mode=ws|p2p&ws=...)
+      try {
+        var params = new URLSearchParams(window.location.search);
+        var urlRoom = params.get('room');
+        var urlMode = params.get('mode');
+        var urlWs = params.get('ws');
+        if (urlMode && (urlMode === 'ws' || urlMode === 'p2p' || urlMode === 'auto')) {
+          transportSelect.value = urlMode;
+        }
+        if (urlWs) {
+          wsUrlInput.value = urlWs;
+        }
+        if (urlRoom && /^\d{6}$/.test(urlRoom.trim())) {
+          joinCodeInput.value = urlRoom.trim();
+          window.openNetplayLobby();
+          netplay.joinRoom(urlRoom.trim(), transportSelect.value, wsUrlInput.value);
+        }
+      } catch (e) {}
+    })();
+  </script>
+</body>
+</html>
