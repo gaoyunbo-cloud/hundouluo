@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>魂斗罗：铁血重装版 CONTRA: SHATTERED OPS HD (720P 跨网联机版)</title>
+  <title>CONTRA: SHATTERED OPS HD (720P Online Co-op Edition)</title>
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
@@ -12,25 +12,25 @@
     <header class="top-bar">
       <div class="brand">
         <span class="brand-badge">720P HD · ONLINE CO-OP</span>
-        <span class="brand-title">魂斗罗：铁血重装版 CONTRA: SHATTERED OPS</span>
+        <span class="brand-title">CONTRA: SHATTERED OPS HD</span>
       </div>
 
       <div class="toolbar">
         <div class="stage-group">
-          <span class="stage-label">速跳战区:</span>
-          <button class="arcade-btn stage-btn active" data-stage="1" type="button" title="第一关：热带雨林">1 雨林</button>
-          <button class="arcade-btn stage-btn" data-stage="2" type="button" title="第二关：赛博基地">2 赛博</button>
-          <button class="arcade-btn stage-btn" data-stage="3" type="button" title="第三关：极寒雪原">3 雪原</button>
-          <button class="arcade-btn stage-btn" data-stage="4" type="button" title="第四关：熔岩地心">4 熔岩</button>
-          <button class="arcade-btn stage-btn" data-stage="5" type="button" title="第五关：异形母巢">5 终局</button>
+          <span class="stage-label">STAGE:</span>
+          <button class="arcade-btn stage-btn active" data-stage="1" type="button" title="Stage 1: Galuga Jungle">1 JUNGLE</button>
+          <button class="arcade-btn stage-btn" data-stage="2" type="button" title="Stage 2: Cybernetic Factory">2 CYBER</button>
+          <button class="arcade-btn stage-btn" data-stage="3" type="button" title="Stage 3: Arctic Blizzard">3 ARCTIC</button>
+          <button class="arcade-btn stage-btn" data-stage="4" type="button" title="Stage 4: Volcanic Magma Core">4 VOLCANO</button>
+          <button class="arcade-btn stage-btn" data-stage="5" type="button" title="Stage 5: Red Falcon Bio-Hive">5 HIVE</button>
         </div>
 
-        <button id="btnNetplay" class="arcade-btn netplay-btn" type="button">🌐 异地联机大厅 (O)</button>
-        <button id="btnTouch" class="arcade-btn" type="button">📱 触屏手柄</button>
-        <button id="btnKonami" class="arcade-btn" type="button">★ 30命秘籍</button>
-        <button id="btnMute" class="arcade-btn active" type="button">音效: 开</button>
-        <button id="btnFullscreen" class="arcade-btn" type="button">全屏</button>
-        <button id="btnRestart" class="arcade-btn" type="button">主菜单 (R)</button>
+        <button id="btnNetplay" class="arcade-btn netplay-btn" type="button">🌐 ONLINE CO-OP (O)</button>
+        <button id="btnTouch" class="arcade-btn" type="button">📱 TOUCH PAD</button>
+        <button id="btnKonami" class="arcade-btn" type="button">★ 30 LIVES</button>
+        <button id="btnMute" class="arcade-btn active" type="button">AUDIO: ON</button>
+        <button id="btnFullscreen" class="arcade-btn" type="button">FULLSCREEN</button>
+        <button id="btnRestart" class="arcade-btn" type="button">MAIN MENU (R)</button>
       </div>
     </header>
 
@@ -49,12 +49,12 @@
           </div>
 
           <div class="action-cluster">
-            <button class="t-btn" data-touch="swap" type="button">切枪</button>
-            <button class="t-btn" data-touch="grenade" type="button">手雷</button>
-            <button class="t-btn" data-touch="dash" type="button">冲刺</button>
-            <button class="t-btn" data-touch="fire" type="button">开火</button>
-            <button class="t-btn" data-touch="jump" type="button">跳跃</button>
-            <button class="t-btn" id="btnTouchCallout" type="button">信号!</button>
+            <button class="t-btn" data-touch="swap" type="button">SWAP</button>
+            <button class="t-btn" data-touch="grenade" type="button">BOMB</button>
+            <button class="t-btn" data-touch="dash" type="button">DASH</button>
+            <button class="t-btn" data-touch="fire" type="button">FIRE</button>
+            <button class="t-btn" data-touch="jump" type="button">JUMP</button>
+            <button class="t-btn" id="btnTouchCallout" type="button">PING!</button>
           </div>
         </div>
       </div>
@@ -64,38 +64,38 @@
     <section class="info-panel">
       <div class="info-card">
         <div>
-          <strong>单人 / 异地联机本机操作（房主 1P 与客机 2P 均用同一套顺手键位）：</strong>
-          <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> 八向瞄准 ·
-          <kbd>J</kbd> 射击 ·
-          <kbd>K</kbd>/<kbd>Space</kbd> 跳跃 ·
-          <kbd>L</kbd>/<kbd>Shift</kbd> <strong>无敌冲刺</strong> ·
-          <kbd>I</kbd>/<kbd>U</kbd> <strong>手雷</strong> ·
-          <kbd>Q</kbd> <strong>切枪</strong> ·
-          <kbd>O</kbd> <strong>跨网联机大厅</strong>
+          <strong>1P / Online Co-op Controls (Host 1P & Guest 2P share the same bindings):</strong>
+          <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> 8-Way Aim ·
+          <kbd>J</kbd> Fire ·
+          <kbd>K</kbd>/<kbd>Space</kbd> Jump ·
+          <kbd>L</kbd>/<kbd>Shift</kbd> <strong>Jet-Dash</strong> ·
+          <kbd>I</kbd>/<kbd>U</kbd> <strong>Grenade</strong> ·
+          <kbd>Q</kbd> <strong>Swap Weapon</strong> ·
+          <kbd>O</kbd> <strong>Online Lobby</strong>
         </div>
         <div>
-          <strong>同机双人键盘 2P：</strong>
-          <kbd>↑</kbd><kbd>↓</kbd><kbd>←</kbd><kbd>→</kbd> 瞄准 ·
-          <kbd>1</kbd> 射击 · <kbd>2</kbd> 跳跃 · <kbd>3</kbd> 冲刺 · <kbd>4</kbd> 手雷 · <kbd>0</kbd> 切枪 ·
-          <strong>战术提示：</strong>防暴盾兵可用<strong>手雷 / 冲刺绕后 / 激光穿透 / 引爆油桶</strong>破防！
+          <strong>Local 2P Keyboard:</strong>
+          <kbd>↑</kbd><kbd>↓</kbd><kbd>←</kbd><kbd>→</kbd> Aim ·
+          <kbd>1</kbd> Fire · <kbd>2</kbd> Jump · <kbd>3</kbd> Dash · <kbd>4</kbd> Grenade · <kbd>0</kbd> Swap ·
+          <strong>Tactical Tip:</strong> Counter Riot Shields with <strong>Grenades / Flank Dash / Railgun Pierce / Fuel Barrels</strong>!
         </div>
       </div>
 
       <div class="info-card">
         <div>
-          <strong>双槽可升级武器库（重复拾取升至 Lv.2★ MAX）：</strong>
-          <span class="tag tag-m">M</span>火神加特林
-          <span class="tag tag-s">S</span>七向散弹炮
-          <span class="tag tag-l">L</span>穿盾电磁炮
-          <span class="tag tag-f">F</span>凝固汽油弹
-          <span class="tag tag-c">C</span>蜂群追踪导弹
+          <strong>Dual-Slot Upgradable Arsenal (Collect duplicate to upgrade to Lv.2★ MAX):</strong>
+          <span class="tag tag-m">M</span>Vulcan Gatling
+          <span class="tag tag-s">S</span>7-Way Spread
+          <span class="tag tag-l">L</span>Pierce Railgun
+          <span class="tag tag-f">F</span>Spiral Napalm
+          <span class="tag tag-c">C</span>Swarm Homing
         </div>
         <div>
-          <strong>特战补给 & 联机支援：</strong>
-          <span class="tag tag-g">💣</span>手雷+护甲修复 ·
-          <span class="tag tag-l">B</span>等离子护盾 ·
-          <span class="tag tag-m">★</span>战术核弹 ·
-          阵亡后可<strong>借命复活</strong> · 秘籍 <kbd>↑↑↓↓←→←→BA</kbd>
+          <strong>Special Supplies & Co-op Support:</strong>
+          <span class="tag tag-g">💣</span>Grenades + Armor ·
+          <span class="tag tag-l">B</span>Plasma Barrier ·
+          <span class="tag tag-m">★</span>Tactical Nuke ·
+          <strong>Borrow Life Revive</strong> · Code <kbd>↑↑↓↓←→←→BA</kbd>
         </div>
       </div>
     </section>
@@ -105,50 +105,50 @@
   <div id="netplayModal" class="modal-backdrop hidden" role="dialog" aria-modal="true">
     <div class="lobby-modal">
       <div class="lobby-header">
-        <h2>🌐 跨网络实时双人联机大厅 (异地 Wi-Fi / 4G / 5G 同玩)</h2>
-        <button id="btnCloseLobby" class="close-btn" type="button">✕ 关闭 (Esc)</button>
+        <h2>🌐 CROSS-NETWORK REAL-TIME CO-OP LOBBY (Wi-Fi / 4G / 5G)</h2>
+        <button id="btnCloseLobby" class="close-btn" type="button">✕ CLOSE (Esc)</button>
       </div>
 
       <div class="transport-bar">
-        <label for="transportSelect"><strong>联机传输引擎：</strong></label>
+        <label for="transportSelect"><strong>Netplay Transport:</strong></label>
         <select id="transportSelect">
-          <option value="auto">⚡ 智能自动选择 (有服务器走中继 / 静态页走云端 P2P)</option>
-          <option value="p2p">☁️ 云端 WebRTC P2P 直连 (免部署服务器 · 6位码穿透)</option>
-          <option value="ws">🚀 WebSocket 房间中继服务器 (100% 穿透对称 NAT / 5G)</option>
+          <option value="auto">⚡ Auto Select (WebSocket Relay if available / Cloud P2P fallback)</option>
+          <option value="p2p">☁️ Cloud WebRTC P2P Direct (Serverless · 6-Digit Room Code)</option>
+          <option value="ws">🚀 WebSocket Relay Server (100% Symmetric NAT / 5G Traversal)</option>
         </select>
-        <input id="wsUrlInput" type="text" placeholder="可选：自定义中继地址 (如 wss://xxx.lhr.life/ws)" />
+        <input id="wsUrlInput" type="text" placeholder="Optional: Custom Relay URL (e.g. wss://xxx.lhr.life/ws)" />
       </div>
 
       <div class="lobby-grid">
         <!-- Host Card -->
         <div class="lobby-card">
-          <h3>👑 我当房主 · 操控 1P 比尔 (Bill)</h3>
-          <p>生成 6 位房间码或一键复制邀请链接发给异地好友（不在同一 Wi-Fi 也可直连），队友加入后自动开启双人战役！</p>
+          <h3>👑 HOST GAME · Play as 1P BILL</h3>
+          <p>Generate a 6-digit room code or copy the invite link to share with a friend anywhere. Co-op starts automatically once 2P joins!</p>
           <div id="roomCodeDisplay" class="room-code-box">------</div>
-          <button id="btnCreateRoom" class="primary-btn" type="button">⚡ 创建 6 位跨网房间</button>
-          <button id="btnCopyLink" class="arcade-btn" type="button">📋 复制一键联机邀请链接</button>
+          <button id="btnCreateRoom" class="primary-btn" type="button">⚡ CREATE 6-DIGIT ROOM</button>
+          <button id="btnCopyLink" class="arcade-btn" type="button">📋 COPY INVITE LINK</button>
         </div>
 
         <!-- Guest Card -->
         <div class="lobby-card">
-          <h3>🤝 加入好友 · 操控 2P 兰斯 (Lance)</h3>
-          <p>输入房主发来的 6 位数字房间码立即空降参战！联机时你在自己设备上同样使用顺手的 WASD+J/K/L 或触屏手柄。</p>
-          <input id="joinCodeInput" class="code-input" type="text" inputmode="numeric" maxlength="6" placeholder="输入6位码" />
-          <button id="btnJoinRoom" class="primary-btn green" type="button">🎮 立即加入房间并肩作战</button>
+          <h3>🤝 JOIN FRIEND · Play as 2P LANCE</h3>
+          <p>Enter the 6-digit room code from the Host to drop in! Use WASD + J/K/L or touch controls on your own device.</p>
+          <input id="joinCodeInput" class="code-input" type="text" inputmode="numeric" maxlength="6" placeholder="6-Digit Code" />
+          <button id="btnJoinRoom" class="primary-btn green" type="button">🎮 JOIN ROOM & DEPLOY</button>
           <div style="font-size: 11px; color: #94a3b8; text-align: center;">
-            提示：双方请保持相同的传输模式（同为自动/中继 或 同为云端 P2P）
+            Tip: Both players should use the same transport mode (Auto/Relay or Cloud P2P).
           </div>
         </div>
       </div>
 
       <div class="status-banner">
-        <span id="netplayStatusText">📡 状态：未连接（当前为本机游玩模式）</span>
+        <span id="netplayStatusText">📡 Status: Offline (Local Mode)</span>
         <div class="callout-row">
-          <button class="arcade-btn callout-btn" data-callout="掩护我!" type="button">📣 掩护我!</button>
-          <button class="arcade-btn callout-btn" data-callout="冲锋推进!" type="button">🔥 冲锋!</button>
-          <button class="arcade-btn callout-btn" data-callout="武器给你!" type="button">🎁 让枪!</button>
-          <button class="arcade-btn callout-btn" data-callout="干得漂亮!" type="button">👍 漂亮!</button>
-          <button id="btnDisconnect" class="arcade-btn" type="button">断开连接</button>
+          <button class="arcade-btn callout-btn" data-callout="COVER ME!" type="button">📣 COVER ME!</button>
+          <button class="arcade-btn callout-btn" data-callout="PUSH FORWARD!" type="button">🔥 PUSH!</button>
+          <button class="arcade-btn callout-btn" data-callout="TAKE WEAPON!" type="button">🎁 TAKE GUN!</button>
+          <button class="arcade-btn callout-btn" data-callout="NICE SHOT!" type="button">👍 NICE!</button>
+          <button id="btnDisconnect" class="arcade-btn" type="button">DISCONNECT</button>
         </div>
       </div>
     </div>
@@ -225,8 +225,8 @@
 
       // Live Netplay Status UI Sync
       netplay.onStatusChange = function (info) {
-        var pingTag = info.active && info.rttMs ? ' · 延迟 ' + info.rttMs + 'ms' : '';
-        var modeTag = info.transport === 'ws' ? ' [WS中继]' : (info.transport === 'p2p' ? ' [云端P2P]' : '');
+        var pingTag = info.active && info.rttMs ? ' · PING ' + info.rttMs + 'ms' : '';
+        var modeTag = info.transport === 'ws' ? ' [WS RELAY]' : (info.transport === 'p2p' ? ' [CLOUD P2P]' : '');
         netplayStatusText.textContent = '📡 ' + info.text + modeTag + pingTag;
 
         if (info.roomCode) {
@@ -237,7 +237,7 @@
 
         if (info.active) {
           btnNetplay.classList.add('connected');
-          btnNetplay.textContent = '🟢 联机中 ' + info.roomCode + (info.rttMs ? ' (' + info.rttMs + 'ms)' : '');
+          btnNetplay.textContent = '🟢 ONLINE ' + info.roomCode + (info.rttMs ? ' (' + info.rttMs + 'ms)' : '');
           if (!autoCloseTimer && !netplayModal.classList.contains('hidden')) {
             autoCloseTimer = setTimeout(function () {
               closeNetplayLobby();
@@ -247,8 +247,8 @@
         } else {
           btnNetplay.classList.remove('connected');
           btnNetplay.textContent = info.status === 'waiting'
-            ? '🟡 待加入: ' + info.roomCode
-            : '🌐 异地联机大厅 (O)';
+            ? '🟡 WAITING: ' + info.roomCode
+            : '🌐 ONLINE CO-OP (O)';
         }
       };
 
@@ -271,24 +271,24 @@
 
       btnCopyLink.addEventListener('click', function () {
         if (!netplay.roomCode) {
-          netplayStatusText.textContent = '⚠️ 请先点击“创建 6 位跨网房间”再复制链接';
+          netplayStatusText.textContent = '⚠️ Please create a 6-digit room first before copying the link';
           return;
         }
         var link = netplay.getInviteLink();
         if (navigator.clipboard && navigator.clipboard.writeText) {
           navigator.clipboard.writeText(link).then(function () {
-            btnCopyLink.textContent = '✅ 已复制邀请链接!';
-            setTimeout(function () { btnCopyLink.textContent = '📋 复制一键联机邀请链接'; }, 2000);
+            btnCopyLink.textContent = '✅ INVITE LINK COPIED!';
+            setTimeout(function () { btnCopyLink.textContent = '📋 COPY INVITE LINK'; }, 2000);
           }).catch(function () {
-            window.prompt('复制以下联机链接发给好友：', link);
+            window.prompt('Copy and share this invite link with your partner:', link);
           });
         } else {
-          window.prompt('复制以下联机链接发给好友：', link);
+          window.prompt('Copy and share this invite link with your partner:', link);
         }
       });
 
       btnDisconnect.addEventListener('click', function () {
-        netplay.disconnect('已手动断开联机');
+        netplay.disconnect('Disconnected by user');
       });
 
       calloutBtns.forEach(function (b) {
@@ -334,7 +334,7 @@
         tb.addEventListener('pointerleave', release);
       });
 
-      var calloutCycle = ['掩护我!', '冲锋推进!', '武器给你!', '干得漂亮!'];
+      var calloutCycle = ['COVER ME!', 'PUSH FORWARD!', 'TAKE WEAPON!', 'NICE SHOT!'];
       var calloutIdx = 0;
       document.getElementById('btnTouchCallout').addEventListener('pointerdown', function (e) {
         e.preventDefault();
@@ -355,7 +355,7 @@
           btn.blur();
           window.Contra.audio.init();
           if (netplay.isGuest()) {
-            netplay.sendCallout('请求跳关: 第' + btn.getAttribute('data-stage') + '关!');
+            netplay.sendCallout('STAGE ' + btn.getAttribute('data-stage') + ' REQUESTED!');
             return;
           }
           var st = parseInt(btn.getAttribute('data-stage'), 10);
@@ -365,7 +365,7 @@
 
       window.updateKonamiBadge = function (on) {
         if (on) {
-          btnKonami.textContent = '★ 30命已激活!';
+          btnKonami.textContent = '★ 30 LIVES ACTIVE!';
           btnKonami.classList.add('konami-on');
         }
       };
@@ -382,7 +382,7 @@
         window.Contra.audio.init();
         var muted = window.Contra.audio.toggleMute();
         btnMute.classList.toggle('active', !muted);
-        btnMute.textContent = muted ? '音效: 静音' : '音效: 开';
+        btnMute.textContent = muted ? 'AUDIO: MUTED' : 'AUDIO: ON';
       });
 
       btnFullscreen.addEventListener('click', function () {

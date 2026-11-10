@@ -363,13 +363,10 @@ window.Contra = window.Contra || {};
         let pInp;
         if (this.autoPilot && (!onlineHost || i === 0)) {
           pInp = this.humanBot.computeInput(this.players[i], this.level, this.entities, this.boss, this.cameraX, this.frameCount);
-          this.players[i].autoPilotSafe = true;
         } else if (onlineHost) {
           pInp = i === 0 ? ns.input.getLocalPrimaryInput() : ns.netplay.getRemoteGuestInput();
-          this.players[i].autoPilotSafe = false;
         } else {
           pInp = ns.input.getPlayerInput(i);
-          this.players[i].autoPilotSafe = false;
         }
         const partner = this.players.length > 1 ? this.players[1 - i] : null;
         this.players[i].update(
@@ -663,22 +660,22 @@ window.Contra = window.Contra || {};
       ctx.fillStyle = '#00e5ff';
       ctx.fillText('NEXT-GEN 720P SKELETAL ACTION REMAKE · 5 FULL STAGES', 84, 72);
 
-      ctx.font = '900 72px "Impact", "Arial Black", "PingFang SC", sans-serif';
+      ctx.font = '900 76px "Impact", "Arial Black", sans-serif';
       ctx.fillStyle = '#b71c1c';
-      ctx.fillText('魂斗罗 CONTRA', 88, 106);
+      ctx.fillText('CONTRA', 88, 104);
       ctx.fillStyle = '#ffd740';
-      ctx.fillText('魂斗罗 CONTRA', 84, 100);
+      ctx.fillText('CONTRA', 84, 98);
 
-      ctx.font = '800 24px "PingFang SC", sans-serif';
+      ctx.font = '800 24px "Arial Black", sans-serif';
       ctx.fillStyle = '#f8fafc';
-      ctx.fillText('SHATTERED OPS HD · 铁血重装版', 86, 186);
+      ctx.fillText('SHATTERED OPS HD · REMASTERED EDITION', 86, 186);
 
       // Interactive Tactical Menu Options
       const diff = this.getDifficulty();
       const rows = [
-        { label: '作战人数 MODE', val: this.twoPlayers ? '◀  2 PLAYERS 双人同屏联机  ▶' : '◀  1 PLAYER 单人铁血闯关  ▶' },
-        { label: '战术难度 DIFFICULTY', val: `◀  ${diff.name}  ▶`, sub: diff.desc },
-        { label: '起始关卡 STAGE SELECT', val: `◀  STAGE ${this.selectedStartStage} / 5  ▶` }
+        { label: 'PLAYERS MODE', val: this.twoPlayers ? '◀  2 PLAYERS CO-OP ASSAULT  ▶' : '◀  1 PLAYER SOLO CAMPAIGN  ▶' },
+        { label: 'COMBAT DIFFICULTY', val: `◀  ${diff.name}  ▶`, sub: diff.desc },
+        { label: 'STARTING MISSION', val: `◀  STAGE ${this.selectedStartStage} / 5  ▶` }
       ];
 
       for (let i = 0; i < rows.length; i++) {
@@ -695,14 +692,14 @@ window.Contra = window.Contra || {};
         ctx.fillStyle = '#94a3b8';
         ctx.fillText(rows[i].label, 104, ry + 11);
 
-        ctx.font = '800 20px "PingFang SC", sans-serif';
+        ctx.font = '800 20px sans-serif';
         ctx.fillStyle = selected ? '#ffd740' : '#e2e8f0';
         ctx.fillText(rows[i].val, 104, ry + 32);
 
         if (rows[i].sub) {
-          ctx.font = '12px "PingFang SC", sans-serif';
+          ctx.font = '12px sans-serif';
           ctx.fillStyle = '#38bdf8';
-          ctx.fillText(rows[i].sub, 330, ry + 11);
+          ctx.fillText(rows[i].sub, 310, ry + 11);
         }
       }
 
@@ -711,23 +708,23 @@ window.Contra = window.Contra || {};
       ctx.fillStyle = '#ffab40';
       ctx.fillText('HI-SCORE: ' + String(this.highScore).padStart(8, '0'), 86, 548);
 
-      ctx.font = '700 15px "PingFang SC", sans-serif';
+      ctx.font = '700 14px sans-serif';
       ctx.fillStyle = '#69f0ae';
-      ctx.fillText('🌐 异地跨网络双人联机：点击顶栏「异地联机大厅」或按 O 键创建/加入 6 位房间码！', 86, 574);
+      ctx.fillText('🌐 ONLINE CO-OP: Click "ONLINE CO-OP (O)" above or press O to host/join a 6-digit room!', 86, 574);
 
       if (this.konamiActive) {
         ctx.fillStyle = '#ffd740';
-        ctx.fillText('★ 30命科乐美神级秘籍已激活 (30 LIVES ACTIVE)! ★', 86, 600);
+        ctx.fillText('★ KONAMI CODE ACTIVATED: 30 LIVES READY! ★', 86, 600);
       } else {
         ctx.fillStyle = '#94a3b8';
-        ctx.font = '13px "PingFang SC", sans-serif';
-        ctx.fillText('支持上/下选择，左/右切换难度与选关 · 秘籍: ↑↑↓↓←→←→BA (30命)', 86, 602);
+        ctx.font = '13px sans-serif';
+        ctx.fillText('UP/DOWN: Select Option · LEFT/RIGHT: Change Value · Code: ↑↑↓↓←→←→BA (30 Lives)', 86, 602);
       }
 
       if (Math.floor(this.frameCount / 22) % 2 === 0) {
-        ctx.font = '900 24px "Arial Black", "PingFang SC", sans-serif';
+        ctx.font = '900 24px "Arial Black", sans-serif';
         ctx.fillStyle = '#00e5ff';
-        ctx.fillText('▶ 按 ENTER / SPACE / J 立即出击！', 86, 642);
+        ctx.fillText('▶ PRESS ENTER / SPACE / J TO DEPLOY!', 86, 642);
       }
     }
 
@@ -818,10 +815,10 @@ window.Contra = window.Contra || {};
 
       if (!p.active) {
         const partner = this.players[1 - p.index];
-        ctx.font = '800 15px "PingFang SC", sans-serif';
+        ctx.font = '800 14px sans-serif';
         ctx.fillStyle = '#ffd740';
         ctx.fillText(
-          partner && partner.active && partner.lives >= 2 ? '按射击键向队友借命复活！' : 'GAME OVER · 战死',
+          partner && partner.active && partner.lives >= 2 ? 'PRESS FIRE TO BORROW 1 LIFE!' : 'GAME OVER · KIA',
           x + 14, y + 24
         );
         ctx.restore();
@@ -889,12 +886,12 @@ window.Contra = window.Contra || {};
       ctx.fillRect(0, 0, WIDTH, HEIGHT);
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
-      ctx.font = '900 46px "Impact", "PingFang SC", sans-serif';
+      ctx.font = '900 46px "Impact", sans-serif';
       ctx.fillStyle = '#ffd740';
-      ctx.fillText('PAUSED · 战术暂停', WIDTH * 0.5, HEIGHT * 0.44);
-      ctx.font = '20px "PingFang SC", sans-serif';
+      ctx.fillText('PAUSED · TACTICAL HOLD', WIDTH * 0.5, HEIGHT * 0.44);
+      ctx.font = '20px sans-serif';
       ctx.fillStyle = '#e2e8f0';
-      ctx.fillText('按 P / ESC 继续战斗   |   按 R 返回主菜单', WIDTH * 0.5, HEIGHT * 0.55);
+      ctx.fillText('PRESS P / ESC TO RESUME   |   PRESS R FOR MAIN MENU', WIDTH * 0.5, HEIGHT * 0.55);
     }
 
     _renderStageClearOverlay(ctx) {
@@ -910,13 +907,13 @@ window.Contra = window.Contra || {};
       ctx.fillStyle = '#ffd740';
       ctx.fillText(`STAGE ${this.stageNum} CLEAR!`, WIDTH * 0.5, HEIGHT * 0.5 - 45);
 
-      ctx.font = '800 22px "PingFang SC", sans-serif';
+      ctx.font = '800 22px sans-serif';
       ctx.fillStyle = '#ffffff';
       ctx.fillText('STAGE CLEAR BONUS: +8,000 PTS', WIDTH * 0.5, HEIGHT * 0.5 + 10);
 
-      ctx.font = '16px "PingFang SC", sans-serif';
+      ctx.font = '16px sans-serif';
       ctx.fillStyle = '#00e5ff';
-      ctx.fillText(this.stageNum < 5 ? `正在突入第 ${this.stageNum + 1} 战区...` : '红隼母巢崩塌中，全员撤离！', WIDTH * 0.5, HEIGHT * 0.5 + 58);
+      ctx.fillText(this.stageNum < 5 ? `DEPLOYING TO STAGE ${this.stageNum + 1}...` : 'RED FALCON HIVE COLLAPSING — EVACUATE NOW!', WIDTH * 0.5, HEIGHT * 0.5 + 58);
     }
 
     _renderGameOverOverlay(ctx) {
@@ -934,17 +931,17 @@ window.Contra = window.Contra || {};
         ctx.fillStyle = '#ffd740';
         ctx.fillText(`CONTINUES REMAINING: ${this.continuesLeft}`, WIDTH * 0.5, 330);
 
-        const opts = ['CONTINUE · 原地满血再战', 'TITLE MENU · 返回主菜单'];
+        const opts = ['CONTINUE · REDEPLOY NOW', 'TITLE MENU · RETURN TO BASE'];
         for (let i = 0; i < 2; i++) {
           const y = 405 + i * 52;
           ctx.fillStyle = this.gameOverCursor === i ? '#00e5ff' : '#94a3b8';
-          ctx.font = '800 24px "PingFang SC", sans-serif';
+          ctx.font = '800 24px sans-serif';
           ctx.fillText((this.gameOverCursor === i ? '▶  ' : '    ') + opts[i], WIDTH * 0.5, y);
         }
       } else {
-        ctx.font = '800 22px "PingFang SC", sans-serif';
+        ctx.font = '800 22px sans-serif';
         ctx.fillStyle = '#ffd740';
-        ctx.fillText('按 ENTER / SPACE 返回主菜单', WIDTH * 0.5, 390);
+        ctx.fillText('PRESS ENTER / SPACE TO RETURN TO TITLE MENU', WIDTH * 0.5, 390);
       }
     }
 
@@ -995,55 +992,94 @@ window.Contra = window.Contra || {};
       ctx.fillStyle = '#ffd740';
       ctx.fillText('★ ALL 5 STAGES CLEARED · MISSION COMPLETE! ★', WIDTH * 0.5, 95);
 
-      ctx.font = '800 26px "PingFang SC", sans-serif';
+      ctx.font = '800 24px sans-serif';
       ctx.fillStyle = '#ffffff';
-      ctx.fillText('恭喜通关！天王鬼与红隼异形母巢已被彻底毁灭！', WIDTH * 0.5, 155);
+      ctx.fillText('EMPEROR GAVA & THE RED FALCON BIO-HIVE HAVE BEEN OBLITERATED!', WIDTH * 0.5, 155);
 
       const best = Math.max(...this.players.map((p) => p.score));
-      const rank = best >= 120000 ? 'SSS · 传奇战神' : (best >= 75000 ? 'S · 王牌铁血兵王' : 'A · 精锐特种兵');
+      const rank = best >= 120000 ? 'SSS · LEGENDARY COMMANDO' : (best >= 75000 ? 'S · SUPREME VETERAN' : 'A · ELITE OPERATIVE');
       ctx.font = '800 22px monospace';
       ctx.fillStyle = '#00e5ff';
       ctx.fillText(`FINAL SCORE: ${String(best).padStart(8, '0')}   |   COMBAT RANK: ${rank}`, WIDTH * 0.5, 615);
 
       if (this.stateTimer > 90 && Math.floor(this.frameCount / 22) % 2 === 0) {
-        ctx.font = '800 20px "PingFang SC", sans-serif';
+        ctx.font = '800 20px sans-serif';
         ctx.fillStyle = '#ffd740';
-        ctx.fillText('按 ENTER / SPACE 返回标题画面再次挑战更高难度', WIDTH * 0.5, 668);
+        ctx.fillText('PRESS ENTER / SPACE TO RETURN TO TITLE SCREEN', WIDTH * 0.5, 668);
       }
     }
 
   }
 
   // ============================================================================
-  // Realistic Human Pro-Player Simulation Agent (Pacing, Crouch, Burst, Deaths)
-  // Designed for Authentic Streaming & Social Media Clips (Zero Cheating Tells)
+  // Veteran Human Player Tactical Agent v2
+  // Authentic Contra Pro Tactics: Prone Clear-Before-Advance, 45°/90° Angles,
+  // Shield Counterplay, Trajectory Duck/Jump/Sidestep & Honest Physics
   // ============================================================================
   class HumanLikeAgent {
     constructor(game) {
       this.game = game;
-      this.state = 'advance'; // 'advance', 'hold_fire', 'crouch_fire', 'loot', 'boss_tactics'
-      this.stateTimer = 0;
-      this.target = null;
-      this.lootTarget = null;
-      this.burstTimer = 0;
-      this.burstFiring = true;
-      this.plannedDeathsDone = 0;
-      this.stageDeaths = {};
-      this.stuckTimer = 0;
-      this.lastX = 0;
+      this.reset();
     }
 
     reset() {
-      this.state = 'advance';
-      this.stateTimer = 0;
-      this.target = null;
-      this.lootTarget = null;
-      this.burstTimer = 0;
-      this.burstFiring = true;
-      this.plannedDeathsDone = 0;
+      this.proneHoldTimer = 0;
+      this.burstCycle = 0;
+      this.totalDeaths = 0;
       this.stageDeaths = {};
+      this.wasDead = false;
       this.stuckTimer = 0;
+      this.lootFrames = 0;
       this.lastX = 0;
+      this.lastStage = 0;
+      this.strafeDir = -1;
+      this.strafeTimer = 0;
+      this.stationAnchorX = 0;
+      this.stationTimer = 0;
+      this.forceAdvanceTimer = 0;
+    }
+
+    _hasSafeGround(level, x, refY) {
+      const topProbe = Math.min(refY - 130, 140);
+      const land = level.resolveLanding(x, topProbe, HEIGHT - 14);
+      if (!land) return null;
+      if (level.getLavaAt(x, land.y + 4)) return null;
+      if (land.y > HEIGHT - 16) return null;
+      return land;
+    }
+
+    _canStepLeft(p, level, cameraX, dist = 34) {
+      if (p.x - dist < cameraX + 42) return false;
+      if (p.onGround && p.currentPlatform) {
+        if (p.x - p.currentPlatform.x > dist + 8) return true;
+        const adj = level.resolveLanding(p.currentPlatform.x - 22, p.y - 16, p.y + 95);
+        return !!(adj && !level.getLavaAt(p.currentPlatform.x - 22, adj.y + 4) && adj.y < HEIGHT - 16);
+      }
+      return !!this._hasSafeGround(level, p.x - dist, p.y);
+    }
+
+    _wantsPowerup(p, type) {
+      if (type === 'R' || type === 'G' || type === 'N' || type === 'B') return true;
+      for (let s = 0; s < 2; s++) {
+        if (p.slots[s] && p.slots[s].id === type) {
+          return p.slots[s].level < 2;
+        }
+      }
+      if (!p.slots[1]) return true;
+      if (p.slots[0].id === 'R' || p.slots[1].id === 'R') return true;
+      // Once holding Spread Lv.2 + another real weapon, never risk overwriting S★!
+      const hasMaxSpread = (p.slots[0].id === 'S' && p.slots[0].level >= 2) ||
+                           (p.slots[1].id === 'S' && p.slots[1].level >= 2);
+      if (hasMaxSpread) return false;
+      const worstTier = Math.min(this._weaponTier(p.slots[0]), this._weaponTier(p.slots[1]));
+      const newTier = this._weaponTier({ id: type, level: 1 });
+      return newTier > worstTier + 0.5;
+    }
+
+    _weaponTier(slot) {
+      if (!slot) return 0;
+      const base = { S: 6, L: 5, M: 4.5, C: 4, F: 3.8, R: 2.5 }[slot.id] || 2;
+      return base + (slot.level >= 2 ? 2.2 : 0);
     }
 
     computeInput(p, level, entities, boss, cameraX, frameCount) {
@@ -1056,284 +1092,971 @@ window.Contra = window.Contra || {};
         swap: false, swapPressed: false
       };
 
-      if (!p.active || p.state === 'dead') return inp;
+      if (this.lastStage !== this.game.stageNum) {
+        this.lastStage = this.game.stageNum;
+        this.proneHoldTimer = 0;
+        this.stuckTimer = 0;
+        this.stationAnchorX = p.x;
+        this.stationTimer = 0;
+        this.forceAdvanceTimer = 0;
+        this.wasDead = false;
+      }
 
-      // Track progress / stuck detection
-      if (Math.abs(p.x - this.lastX) < 1.0) {
+      if (!p.active) return inp;
+      if (p.state === 'dead') {
+        if (!this.wasDead) {
+          this.wasDead = true;
+          this.totalDeaths++;
+          this.stageDeaths[this.game.stageNum] = (this.stageDeaths[this.game.stageNum] || 0) + 1;
+        }
+        return inp;
+      }
+      this.wasDead = false;
+
+      if (this.proneHoldTimer > 0) this.proneHoldTimer--;
+      if (this.strafeTimer > 0) this.strafeTimer--;
+      if (this.forceAdvanceTimer > 0) this.forceAdvanceTimer--;
+
+      const isBossFight = !!(boss && boss.active && !boss.dying && !boss.dead);
+      const onBridge = !!(p.onGround && (
+        (p.currentPlatform && p.currentPlatform.type === 'bridge') ||
+        (level.bridges && level.bridges.some(b => p.x >= b.x - 30 && p.x <= b.x + b.segments * b.segWidth + 40))
+      ));
+      const curWep = p.getActiveWeapon();
+      const hasWideShot = curWep.id === 'S' || curWep.id === 'C';
+
+      // Track genuine horizontal stall & anti-loop station watchdog
+      if (Math.abs(p.x - this.lastX) < 0.8) {
         this.stuckTimer++;
       } else {
         this.stuckTimer = 0;
         this.lastX = p.x;
       }
-
-      const isBossFight = boss && boss.active && !boss.dying && !boss.dead;
-
-      // 1. Scan Environment: Boss > Nearest Enemy > Dropped Powerup Item > Flying Pod
-      let primaryTarget = null;
-      let targetDist = Infinity;
-      let enemyAheadCount = 0;
-
-      if (isBossFight) {
-        const pts = boss.getTargetPoints();
-        if (pts.length > 0) {
-          primaryTarget = pts[0];
-          targetDist = Math.hypot(pts[0].x - p.x, pts[0].y - p.y);
-        }
-      }
-
-      // Check dropped powerups (Looting priority!)
-      this.lootTarget = null;
-      for (let i = 0; i < entities.powerups.length; i++) {
-        const pu = entities.powerups[i];
-        if (pu.x >= cameraX - 20 && pu.x <= cameraX + ns.CONFIG.WIDTH + 40) {
-          this.lootTarget = pu;
-          break;
-        }
-      }
-
-      // Scan enemies
-      for (let i = 0; i < entities.enemies.length; i++) {
-        const e = entities.enemies[i];
-        if (e.x >= cameraX - 30 && e.x <= cameraX + ns.CONFIG.WIDTH + 60) {
-          const ey = (e.type === 'turret' || e.type === 'drone') ? e.y : e.y - (e.h || 50) * 0.5;
-          const dist = Math.hypot(e.x - p.x, ey - p.y);
-          if (e.x > p.x - 30) enemyAheadCount++;
-          if (!primaryTarget || dist < targetDist) {
-            targetDist = dist;
-            primaryTarget = { x: e.x, y: ey, type: e.type, obj: e };
-          }
-        }
-      }
-
-      // Scan weapon containers (flying pods / pillboxes)
-      for (let i = 0; i < entities.containers.length; i++) {
-        const c = entities.containers[i];
-        if (c.x >= cameraX - 20 && c.x <= cameraX + ns.CONFIG.WIDTH + 60) {
-          const cDist = Math.hypot(c.x - p.x, c.y - p.y);
-          if (!primaryTarget || cDist < targetDist) {
-            targetDist = cDist;
-            primaryTarget = { x: c.x, y: c.y, type: 'container' };
-          }
-          break;
-        }
-      }
-
-      this.target = primaryTarget;
-
-      // 2. Realistic Pacing State Machine (走走停停、下蹲射击、搜寻物资)
-      if (this.stateTimer > 0) this.stateTimer--;
-
-      if (this.stateTimer <= 0) {
-        if (this.lootTarget && Math.abs(this.lootTarget.x - p.x) < 340) {
-          this.state = 'loot';
-          this.stateTimer = 40;
-        } else if (isBossFight) {
-          this.state = 'boss_tactics';
-          this.stateTimer = 35;
-        } else if (enemyAheadCount >= 2 && targetDist < 380) {
-          // Tactical pause: stop and shoot, or crouch behind cover
-          if (Math.random() < 0.55 && p.onGround) {
-            this.state = 'crouch_fire';
-            this.stateTimer = 25 + Math.floor(Math.random() * 25); // 0.4s ~ 0.8s crouch
-          } else {
-            this.state = 'hold_fire';
-            this.stateTimer = 22 + Math.floor(Math.random() * 20);
-          }
-        } else if (enemyAheadCount === 0 && Math.random() < 0.08) {
-          // Natural slight pause or check-step
-          this.state = 'advance';
-          this.stateTimer = 45 + Math.floor(Math.random() * 35);
-        } else {
-          this.state = 'advance';
-          this.stateTimer = 60;
-        }
-      }
-
-      // 3. Movement Execution based on State
-      if (this.state === 'loot' && this.lootTarget) {
-        // Move towards the dropped powerup
-        const dx = this.lootTarget.x - p.x;
-        if (dx > 12) inp.right = true;
-        else if (dx < -12) inp.left = true;
-        if (this.lootTarget.y < p.y - 28 && p.onGround) {
-          inp.jump = true;
-          inp.jumpPressed = true;
-        }
-      } else if (this.state === 'crouch_fire' && p.onGround) {
-        // Classic Contra crouch-and-shoot pose
-        inp.down = true;
-        if (this.target && this.target.x < p.x) inp.left = true;
-        else inp.right = true;
-      } else if (this.state === 'hold_fire') {
-        // Stop moving horizontally, just stand and aim/fire
-        if (this.target && this.target.x < p.x) inp.left = true;
-        else inp.right = true;
-      } else if (this.state === 'boss_tactics') {
-        // Pro boss spacing and strafe
-        if (this.target) {
-          const dist = this.target.x - p.x;
-          if (dist < 260) {
-            inp.left = true;
-          } else if (dist > 450) {
-            inp.right = true;
-          } else {
-            if (frameCount % 60 < 25) inp.left = true;
-            else if (frameCount % 60 < 50) inp.right = true;
-          }
-        }
-        if (p.onGround && frameCount % 48 === 0) {
-          inp.jump = true;
-          inp.jumpPressed = true;
+      if (!isBossFight && Math.abs(p.x - this.stationAnchorX) < 38) {
+        this.stationTimer++;
+        if (this.stationTimer > 220) {
+          this.forceAdvanceTimer = 46;
+          this.stationTimer = 0;
         }
       } else {
-        // 'advance': Smooth, deliberate progression
-        inp.right = true;
+        this.stationAnchorX = p.x;
+        this.stationTimer = 0;
       }
 
-      // 4. Platform Navigation & Terrain Awareness
-      if (this.state !== 'crouch_fire') {
-        const lookDir = inp.right ? 1 : (inp.left ? -1 : p.facing);
-        const aheadX = p.x + lookDir * 45;
-        const groundAhead = level.resolveLanding(aheadX, p.y - 45, p.y + 70);
-        const lavaAhead = level.getLavaAt(aheadX, p.y + 20);
+      // ----------------------------------------------------------------------
+      // 1) Smart Dual-Weapon Selection (protect top-tier weapon when looting!)
+      // ----------------------------------------------------------------------
+      if (p.slots[0] && p.slots[1]) {
+        const active = p.slots[p.activeSlot];
+        const other = p.slots[1 - p.activeSlot];
+        let wantSwap = false;
 
-        // Jump across chasms, lava, or up to higher ledge
-        if (!groundAhead || lavaAhead) {
-          if (p.onGround) {
-            inp.jump = true;
-            inp.jumpPressed = true;
+        // If about to pick up a new weapon type, switch to weaker slot so we replace 'R' instead of 'S'!
+        const nearNewWeaponPickup = entities.powerups.find(
+          (pu) => ns.CONFIG.WEAPONS[pu.powerType] &&
+                  pu.powerType !== 'R' &&
+                  p.slots[0].id !== pu.powerType &&
+                  p.slots[1].id !== pu.powerType &&
+                  Math.abs(pu.x - p.x) < 95 &&
+                  this._wantsPowerup(p, pu.powerType)
+        );
+        if (nearNewWeaponPickup) {
+          if (this._weaponTier(other) < this._weaponTier(active)) {
+            wantSwap = true;
           }
-        } else if (groundAhead && groundAhead.y < p.y - 28) {
-          if (p.onGround) {
-            inp.jump = true;
-            inp.jumpPressed = true;
+        } else if (frameCount % 20 === 0) {
+          const shieldAhead = entities.enemies.some(
+            (e) => e.type === 'shield' && e.x > p.x - 20 && e.x < p.x + 380 && Math.abs(e.y - p.y) < 85
+          );
+          if (shieldAhead && (other.id === 'L' || other.id === 'F') && active.id !== 'L' && active.id !== 'F') {
+            wantSwap = true;
+          } else if (this._weaponTier(other) > this._weaponTier(active) + 0.3) {
+            wantSwap = true;
           }
         }
-
-        // Unstuck jump if bumping into wall / ledge
-        if (p.onGround && this.stuckTimer > 18) {
-          inp.jump = true;
-          inp.jumpPressed = true;
-          if (this.stuckTimer > 40 && p.dashCooldown <= 0) {
-            inp.dash = true;
-            inp.dashPressed = true;
-          }
-        }
-
-        // Bridge segment collapse reaction
-        for (let b = 0; b < level.bridgeSegments.length; b++) {
-          const bs = level.bridgeSegments[b];
-          if (bs.triggered && bs.alive && Math.abs(p.x - bs.x) < 50) {
-            inp.jump = true;
-            inp.jumpPressed = true;
-            inp.right = true;
-            break;
-          }
+        if (wantSwap) {
+          inp.swap = true;
+          inp.swapPressed = true;
         }
       }
 
-      // 5. Natural Aiming
-      if (this.target) {
-        const dx = this.target.x - p.x;
-        const dy = this.target.y - (p.y - 42);
+      // ----------------------------------------------------------------------
+      // 2) Scan Threats, Destructible Orbs, Containers & Safe Loot
+      // ----------------------------------------------------------------------
+      let destructibleOrb = null;
+      for (let i = 0; i < entities.enemyBullets.length; i++) {
+        const eb = entities.enemyBullets[i];
+        if (eb.destructible && eb.x > cameraX && eb.x < cameraX + WIDTH) {
+          const d = Math.hypot(eb.x - p.x, eb.y - (p.y - 40));
+          if (d < 340 && (!destructibleOrb || d < destructibleOrb.dist)) {
+            destructibleOrb = { x: eb.x, y: eb.y, dist: d };
+          }
+        }
+      }
 
-        if (dx < -25) {
-          if (this.state !== 'advance') inp.left = true;
-        } else if (dx > 25) {
-          if (this.state !== 'advance') inp.right = true;
+      let proneEnemy = null;     // cannon / sniper / runner / alien on same elevation -> LIE PRONE!
+      let shieldEnemy = null;    // riot-shield trooper
+      let lowerTarget = null;    // cliff-mounted turret or pillbox below player
+      let highTarget = null;     // elevated grenadier / sniper / drone / jetpack / pod
+      let generalEnemy = null;
+      let nearBarrel = null;
+
+      for (let i = 0; i < entities.enemies.length; i++) {
+        const e = entities.enemies[i];
+        if (e.x < cameraX - 24 || e.x > cameraX + WIDTH - 18) continue;
+        const dx = e.x - p.x;
+        const absDx = Math.abs(dx);
+        const ey = (e.type === 'turret' || e.type === 'drone') ? e.y : e.y - e.h * 0.5;
+
+        if (e.type === 'barrel') {
+          if (dx > 50 && dx < 460) nearBarrel = e;
+          continue;
         }
 
-        if (dy < -40) {
+        // Same-platform threats: classic Contra lie-down-and-clear!
+        if (
+          (e.type === 'cannon' || e.type === 'sniper' || e.type === 'runner' || e.type === 'alien') &&
+          Math.abs(e.y - p.y) <= 34 &&
+          ((dx >= 38 && dx <= 600) || (e.type !== 'cannon' && dx >= -260 && dx <= -32))
+        ) {
+          const score = (e.type === 'alien' ? 0 : (e.type === 'runner' ? 30 : 60)) + absDx;
+          if (!proneEnemy || score < proneEnemy.score) {
+            proneEnemy = { e, dx, ey, score };
+          }
+          continue;
+        }
+
+        if (
+          e.type === 'shield' &&
+          ((dx >= -48 && dx < 420 && Math.abs(e.y - p.y) <= 45) ||
+           (dx >= -150 && dx < -48 && Math.abs(e.y - p.y) <= 24 && (!p.currentPlatform || e.x >= p.currentPlatform.x)))
+        ) {
+          if (!shieldEnemy || absDx < Math.abs(shieldEnemy.dx)) {
+            shieldEnemy = { e, dx, ey };
+          }
+          continue;
+        }
+
+        if (e.type === 'turret' && dx > -20 && dx < 470 && e.y > p.y + 18 && e.y < p.y + 125) {
+          if (!lowerTarget || dx < lowerTarget.dx) {
+            lowerTarget = { obj: e, x: e.x, y: e.y, dx, isTurret: true, open: e.open };
+          }
+          continue;
+        }
+
+        if (ey < p.y - 68 && dx > -42 && dx < 500) {
+          if (!highTarget || absDx < Math.abs(highTarget.dx)) {
+            highTarget = { obj: e, x: e.x, y: ey, dx, kind: e.type };
+          }
+          continue;
+        }
+
+        if (!generalEnemy || absDx < Math.abs(generalEnemy.dx)) {
+          generalEnemy = { e, x: e.x, y: ey, dx };
+        }
+      }
+
+      // Containers: flying weapon pods & cliff pillboxes
+      let podTarget = null;
+      for (let i = 0; i < entities.containers.length; i++) {
+        const c = entities.containers[i];
+        if (c.x < cameraX + 12 || c.x > cameraX + WIDTH - 28) continue;
+        const dx = c.x - p.x;
+        if (c.kind === 'pod') {
+          if (dx > -480 && dx < 460 && this._wantsPowerup(p, c.power)) {
+            podTarget = { x: c.x, y: c.y, dx, isPod: true };
+          }
+        } else if (c.kind === 'pillbox' && !isBossFight) {
+          if (dx > 15 && dx < 420 && this._wantsPowerup(p, c.power)) {
+            if (c.y > p.y + 18 && c.y < p.y + 125 && !lowerTarget) {
+              lowerTarget = { obj: c, x: c.x, y: c.y, dx, isTurret: false, open: c.openAmount > 0.1 };
+            } else if (Math.abs(c.y - (p.y - 40)) <= 48 && !generalEnemy) {
+              generalEnemy = { e: c, x: c.x, y: c.y, dx };
+            }
+          }
+        }
+      }
+
+      // Safe reachable ground powerups (never backtrack across chasms or chase stranded items!)
+      let lootItem = null;
+      for (let i = 0; i < entities.powerups.length; i++) {
+        const pu = entities.powerups[i];
+        if ((pu._agentTicks || 0) > 105) continue;
+        if (pu.x < cameraX + 32 || pu.x > cameraX + WIDTH - 36) continue;
+        if (!this._wantsPowerup(p, pu.powerType)) continue;
+        if (Math.abs(pu.x - p.x) > 360 || pu.y < p.y - 140) continue;
+        if (pu.x < p.x - 16 && p.currentPlatform && pu.x < p.currentPlatform.x + 18) continue;
+        if (pu.y > p.y + 24 && p.onGround && p.currentPlatform && !p.currentPlatform.droppable && Math.abs(pu.x - p.x) < 95) continue;
+        if (this._hasSafeGround(level, pu.x, Math.max(p.y, pu.y))) {
+          lootItem = pu;
+          break;
+        }
+      }
+
+      // ----------------------------------------------------------------------
+      // 3) Core Tactical Decision: Boss Combat vs Stage Clear-Before-Advance
+      // ----------------------------------------------------------------------
+      let engagingStationary = false;
+      let wantFire = false;
+      let aimTarget = null;
+      const forcePush = this.forceAdvanceTimer > 0;
+
+      const flankedShield = shieldEnemy && (
+        (shieldEnemy.dx < 0 && shieldEnemy.e.facing < 0) ||
+        (shieldEnemy.dx > 0 && shieldEnemy.e.facing > 0)
+      );
+      const urgentGroundRush = proneEnemy && (
+        (proneEnemy.e.type === 'alien' && Math.abs(proneEnemy.dx) < 380) ||
+        (proneEnemy.e.type === 'runner' && Math.abs(proneEnemy.dx) < 300) ||
+        (proneEnemy.e.type === 'cannon' && proneEnemy.e.riseProgress >= 0.65 && Math.abs(proneEnemy.dx) < 420)
+      );
+      const clearElevatedFirst = !forcePush && !urgentGroundRush && highTarget && Math.abs(highTarget.dx) < 380;
+
+      if (isBossFight) {
+        this._executeBossTactics(p, level, entities, boss, cameraX, frameCount, inp, proneEnemy, destructibleOrb);
+        wantFire = true;
+      } else if (proneEnemy && !flankedShield && !clearElevatedFirst && p.onGround && !p.inWater && !onBridge) {
+        // CLASSIC CONTRA VETERAN MOVE: Stop, lie completely prone, kill cannon/sniper/runner/alien, then advance!
+        engagingStationary = true;
+        this.stuckTimer = 0;
+        this.proneHoldTimer = 10;
+        const e = proneEnemy.e;
+        const wantDir = proneEnemy.dx >= 0 ? 1 : -1;
+
+        // If an alien already leaped high into the air, stand & shoot it at 45° up!
+        if (e.type === 'alien' && !e.onGround && e.y < p.y - 28) {
+          if (wantDir > 0) inp.right = true; else inp.left = true;
           inp.up = true;
-        } else if (dy > 45 && !p.onGround) {
+          wantFire = true;
+        } else if (p.facing !== wantDir) {
+          // Tap direction for 1 frame to face the target before dropping prone
+          if (wantDir > 0) inp.right = true; else inp.left = true;
+          inp.down = false;
+          wantFire = true;
+        } else {
+          // Hold DOWN with ZERO horizontal movement -> true 'prone' posture!
+          inp.left = false;
+          inp.right = false;
           inp.down = true;
+          // Wait gracefully for pop-up cannon armor to open before firing burst
+          wantFire = !(e.type === 'cannon' && e.riseProgress < 0.42);
         }
-      }
+      } else if (this.proneHoldTimer > 0 && !clearElevatedFirst && p.onGround && !p.inWater && !onBridge) {
+        // Brief human confirmation pause (~0.15s) after prone kill before standing up
+        engagingStationary = true;
+        this.stuckTimer = 0;
+        inp.left = false;
+        inp.right = false;
+        inp.down = true;
+        wantFire = false;
+      } else if (shieldEnemy && !onBridge) {
+        // RIOT-SHIELD COUNTERPLAY: Barrel blast -> Frag Grenade -> Railgun/Napalm -> Dash/Apex-Jump behind!
+        this.stuckTimer = 0;
+        const se = shieldEnemy.e;
+        const dx = shieldEnemy.dx;
+        const nearbyBarrel = nearBarrel && Math.abs(nearBarrel.x - se.x) < 190 ? nearBarrel : null;
+        const piercesShield = curWep.id === 'L' || curWep.id === 'F';
+        const shieldBlockingUs = (dx > 0 && se.facing < 0) || (dx < 0 && se.facing > 0);
 
-      // 6. Natural Shooting Rhythm & Burst Fire
-      this.burstTimer++;
-      if (this.burstTimer % 18 === 0) {
-        this.burstFiring = Math.random() < 0.92;
-      }
-      if (this.burstFiring || isBossFight || (this.target && targetDist < 300)) {
-        inp.fire = true;
-        inp.firePressed = (frameCount % 3 !== 0);
-      }
-
-      // Tactical Frag Grenade: throw at shielded enemies, turrets, barrels, or boss
-      if (p.grenades > 0 && p.grenadeCooldown <= 0 && this.target) {
-        const isTough = isBossFight || (this.target.type === 'shield' || this.target.type === 'turret' || this.target.type === 'cannon' || this.target.type === 'barrel');
-        if (isTough && targetDist < 320 && Math.abs(this.target.y - p.y) < 160) {
-          if (frameCount % 36 === 0) {
+        if (nearbyBarrel && Math.abs(nearbyBarrel.y - p.y) < 42) {
+          engagingStationary = true;
+          if (p.facing < 0) inp.right = true;
+          else { inp.down = true; } // Prone shot into TNT barrel!
+          wantFire = true;
+        } else if (piercesShield || !shieldBlockingUs) {
+          // Either our weapon pierces shields OR we flanked behind his back!
+          engagingStationary = true;
+          const wantDir = dx >= 0 ? 1 : -1;
+          if (p.facing !== wantDir) {
+            if (wantDir > 0) inp.right = true; else inp.left = true;
+          } else if (p.onGround && Math.abs(se.y - p.y) <= 28) {
+            inp.down = true;
+          }
+          wantFire = true;
+        } else if (p.grenades > 0 && p.grenadeCooldown <= 0 && entities.grenades.length === 0 && Math.abs(se.y - p.y) < 70 && dx > 195) {
+          // Exact grenade ballistics: low-arc (down+grenade) hits at ~265..350px; standard arc hits at ~355..435px!
+          if (dx > 350 && dx < 435) {
+            engagingStationary = true;
+            if (p.facing < 0) inp.right = true;
+            else { inp.grenade = true; inp.grenadePressed = true; }
+          } else if (dx >= 260 && dx <= 350) {
+            engagingStationary = true;
+            if (p.facing < 0) inp.right = true;
+            else {
+              inp.down = true; // Low-arc direct chest impact!
+              inp.grenade = true;
+              inp.grenadePressed = true;
+            }
+          } else if (dx > 435) {
+            inp.right = true;
+          } else if (this._canStepLeft(p, level, cameraX, 36)) {
+            inp.left = true;
+          } else {
+            inp.down = true;
             inp.grenade = true;
             inp.grenadePressed = true;
           }
+          wantFire = false;
+        } else if (entities.grenades.length > 0 && dx > 150) {
+          // Grenade already in flight -> hold safe spacing until detonation!
+          engagingStationary = true;
+          if (dx < 190 && this._canStepLeft(p, level, cameraX, 30)) inp.left = true;
+          wantFire = false;
+        } else {
+          // Close-quarters flank: early apex somersault at dx 135..175 (clears helmet by 100px!) or invincible Jet-Dash at dx 50..85!
+          inp.right = dx > -52;
+          if (dx >= 132 && dx <= 172 && p.onGround) {
+            inp.jump = true;
+            inp.jumpPressed = true;
+          } else if (dx > 0 && dx <= 86 && p.dashCooldown <= 0) {
+            inp.dash = true;
+            inp.dashPressed = true;
+          }
+          wantFire = !shieldBlockingUs;
         }
-      }
-
-      // 7. Tactical Weapon Swap
-      if (p.slots[1] && p.slots[1].id !== p.slots[0].id) {
-        const curW = p.getActiveWeapon();
-        const otherW = p.slots[1 - p.activeSlot];
-        if (otherW && (otherW.id === 'S' || otherW.id === 'L' || otherW.level > curW.level)) {
-          if (frameCount % 90 === 0 && Math.random() < 0.3) {
-            inp.swap = true;
-            inp.swapPressed = true;
+      } else if (lowerTarget && !onBridge && !forcePush) {
+        // CLIFF-WALL TURRET / PILLBOX BELOW: Position at 45° down-right firing line & destroy!
+        this.stuckTimer = 0;
+        const desiredDx = Math.max(75, (lowerTarget.y - p.y) + 55);
+        const dx = lowerTarget.dx;
+        if (dx > desiredDx + 32 && !(hasWideShot && dx < 260)) {
+          inp.right = true;
+          wantFire = hasWideShot;
+        } else if (dx < desiredDx - 24 && this._canStepLeft(p, level, cameraX, 26)) {
+          inp.left = true;
+          wantFire = false;
+        } else {
+          engagingStationary = true;
+          // 45° down-right requires right + down while moving slightly; alternate micro-step to stay on angle!
+          if ((frameCount % 10) < 7 || !this._canStepLeft(p, level, cameraX, 20)) {
+            inp.right = true;
+            inp.down = true;
+            wantFire = lowerTarget.open;
+          } else {
+            inp.left = true;
+            wantFire = false;
           }
         }
-      }
+      } else if ((highTarget || podTarget) && !onBridge && !forcePush) {
+        // ELEVATED SNIPER / GRENADIER / DRONE / JETPACK / WEAPON POD: 45° up-right or 90° straight up!
+        const ht = highTarget || podTarget;
+        this.stuckTimer = 0;
+        const dx = ht.dx;
+        const isAerialMover = ht.kind === 'jetpack' || ht.kind === 'drone' || !ht.kind;
+        const desiredDx = Math.max(55, (p.y - 52) - ht.y);
 
-      // 8. Controlled, Dramatic Deaths ("最好还死几次，这种看起来真实一点")
-      // Condition: Stage 2 (Death 1) and Stage 4 (Death 2) when lives >= 3
-      const canPlanDeath = this.plannedDeathsDone < 2 &&
-                           p.lives >= 3 &&
-                           (this.game.stageNum === 2 || this.game.stageNum === 4) &&
-                           !this.stageDeaths[this.game.stageNum] &&
-                           this.game.state === 'playing';
-
-      let shouldTakeHitThisFrame = false;
-      if (canPlanDeath) {
-        if (isBossFight || enemyAheadCount >= 2) {
-          if (p.hp === 1 && Math.random() < 0.04) {
-            shouldTakeHitThisFrame = true;
-            this.plannedDeathsDone++;
-            this.stageDeaths[this.game.stageNum] = true;
+        if (Math.abs(dx) <= 42) {
+          engagingStationary = true;
+          inp.left = false;
+          inp.right = false;
+          inp.up = true;
+          wantFire = true;
+        } else if (dx > 42) {
+          if (isAerialMover || hasWideShot) {
+            // Aerial movers actively keep ~190px distance -> hold micro-stepped 45° up-right fire!
+            engagingStationary = true;
+            if ((frameCount % 8) < 6 || !this._canStepLeft(p, level, cameraX, 18)) {
+              inp.right = true;
+              inp.up = true;
+              wantFire = true;
+            } else {
+              inp.left = true;
+              wantFire = false;
+            }
+          } else if (dx > desiredDx + 45) {
+            inp.right = true;
+            inp.up = dx < desiredDx + 120;
+            wantFire = dx < desiredDx + 95;
+          } else if (dx < desiredDx - 32 && this._canStepLeft(p, level, cameraX, 26)) {
+            inp.left = true;
+            inp.up = true;
+            wantFire = true;
+          } else {
+            engagingStationary = true;
+            if ((frameCount % 9) < 6 || !this._canStepLeft(p, level, cameraX, 18)) {
+              inp.right = true;
+              inp.up = true;
+              wantFire = true;
+            } else {
+              inp.left = true;
+              wantFire = false;
+            }
           }
+        } else if (dx < -210 && ht.isPod) {
+          // Wait stationary for flying weapon pod to glide into 45° up-left firing cone!
+          engagingStationary = true;
+          inp.left = false;
+          inp.right = false;
+          wantFire = false;
+        } else if (this._canStepLeft(p, level, cameraX, 24)) {
+          inp.left = true;
+          inp.up = true;
+          wantFire = true;
+        } else {
+          inp.up = true;
+          wantFire = true;
+        }
+      } else if (lootItem && p.onGround && !onBridge && !forcePush) {
+        // Deliberately walk/drop to pick up safe upgraded weapon / grenade / rapid-fire pod (only when grounded!)
+        lootItem._agentTicks = (lootItem._agentTicks || 0) + 1;
+        this.lootFrames++;
+        this.stuckTimer = 0;
+        const dx = lootItem.x - p.x;
+        if (dx > 16) inp.right = true;
+        else if (dx < -16) inp.left = true;
+        else if (lootItem.y > p.y + 24 && p.onGround && p.currentPlatform && p.currentPlatform.droppable) {
+          // Item landed on platform directly below -> drop down to grab it!
+          inp.left = false;
+          inp.right = false;
+          inp.down = true;
+          inp.jump = true;
+          inp.jumpPressed = true;
+        }
+        if (lootItem.y < p.y - 42 && Math.abs(dx) < 95 && p.onGround) {
+          inp.jump = true;
+          inp.jumpPressed = true;
+        }
+        if (generalEnemy) {
+          aimTarget = generalEnemy;
+          wantFire = true;
+        }
+      } else {
+        this.lootFrames = 0;
+        // Clear ahead -> Steady human advance (with occasional micro check-pause, never mindless holding)
+        inp.right = true;
+        if (generalEnemy) {
+          aimTarget = generalEnemy;
+          wantFire = true;
+          if (generalEnemy.y < p.y - 68) inp.up = true;
+          else if (generalEnemy.y > p.y + 24) inp.down = true;
+        } else if (nearBarrel && nearBarrel.x - p.x < 280) {
+          wantFire = true;
         }
       }
 
-      // 9. Bullet Evasion (unless taking the planned dramatic death!)
-      if (!shouldTakeHitThisFrame) {
-        for (let i = 0; i < entities.enemyBullets.length; i++) {
-          const eb = entities.enemyBullets[i];
-          const bdist = Math.hypot(eb.x - p.x, eb.y - (p.y - 36));
-          if (bdist < 105) {
-            const bulletY = eb.y;
-            const playerChestY = p.y - 36;
+      // Shoot down destructible seeker orbs immediately if close
+      if (destructibleOrb && destructibleOrb.dist < 220 && !engagingStationary) {
+        aimTarget = destructibleOrb;
+        wantFire = true;
+        if (destructibleOrb.y < p.y - 68) inp.up = true;
+      }
 
-            if (p.dashCooldown <= 0 && (bdist < 65 || p.hp <= 1)) {
-              inp.dash = true;
-              inp.dashPressed = true;
-            } else if (p.onGround && bulletY < playerChestY && bulletY > p.y - 68) {
-              inp.down = true;
-            } else if (p.onGround && bulletY >= playerChestY) {
-              inp.jump = true;
-              inp.jumpPressed = true;
+      // ----------------------------------------------------------------------
+      // 4) Projectile Trajectory Evasion (Duck Prone, Sidestep, Timed Jump, Dash)
+      //    + Controlled Late-Stage Boss Drama (0 Stage-1 Deaths, 1 Tense Late-Stage Boss Death!)
+      // ----------------------------------------------------------------------
+      if (p.invulnTimer <= 4 && p.barrierTimer <= 0 && p.dashTimer <= 0) {
+        this._evadeIncomingThreats(p, level, entities, boss, cameraX, inp);
+      }
+
+      // ----------------------------------------------------------------------
+      // 5) World Boundary & Hazard Safety (Laser Gates, Chasms, Bridges, Cliffs)
+      //    Runs AFTER combat & bullet evasion so a dodge NEVER steps into a pit or beam!
+      // ----------------------------------------------------------------------
+      if (!isBossFight) {
+        // 5a) Security Laser Gate Timing: stop cleanly (>=56px) before active/warning beam!
+        for (let i = 0; i < level.laserGates.length; i++) {
+          const lg = level.laserGates[i];
+          const distToGate = lg.x - p.x;
+          if (distToGate > -16 && distToGate < 96 && p.y > lg.y1 - 10 && p.y - 74 < lg.y2) {
+            const t = frameCount % lg.period;
+            const unsafe = lg.active || t > lg.period - 32 || t < lg.activeFrames + 4;
+            if (unsafe) {
+              this.stuckTimer = 0;
+              this.stationTimer = 0;
+              inp.right = false;
+              inp.jump = false;
+              inp.jumpPressed = false;
+              inp.dash = false;
+              inp.dashPressed = false;
+              if (distToGate < 54 && this._canStepLeft(p, level, cameraX, 24)) {
+                inp.left = true;
+                inp.down = false;
+              } else {
+                inp.down = p.onGround && distToGate >= 52;
+              }
+            } else if (distToGate < 64 && !inp.jumpPressed) {
+              inp.right = true;
+              inp.down = false;
             }
             break;
           }
         }
+
+        // Guard against backing off a left cliff lip into a pit or lava!
+        if (inp.left && p.onGround && !this._canStepLeft(p, level, cameraX, 22)) {
+          inp.left = false;
+          inp.dash = false;
+          inp.dashPressed = false;
+        }
+
+        // 5b) Platform Edge, Step-Up Cliff, Chasm & Moving-Lift Navigation
+        if (inp.right && p.onGround && p.currentPlatform) {
+          const plat = p.currentPlatform;
+          const platRight = plat.x + plat.w;
+          const distToEdge = platRight - p.x;
+
+          if (plat.type === 'bridge') {
+            // Sprint across exploding suspension bridge and leap cleanly off the end!
+            inp.down = false;
+            const nextAlive = level.bridgeSegments.some(
+              (bs) => bs.alive && bs.x >= platRight - 4 && bs.x <= platRight + 20
+            );
+            const farCliff = level.resolveLanding(platRight + 28, p.y - 25, p.y + 45);
+            if ((!nextAlive && !farCliff && distToEdge < 42) || (plat.triggered && plat.fuse < 12)) {
+              inp.jump = true;
+              inp.jumpPressed = true;
+            }
+          } else if (distToEdge < 34) {
+            // If on a droppable upper ledge and lower ground extends further ahead, drop down!
+            if (plat.droppable) {
+              const lowerPlat = level.resolveLanding(p.x, p.y + 14, p.y + 250, plat.y);
+              const dropHeight = lowerPlat ? (lowerPlat.y - plat.y) : 0;
+              const minRunwayNeeded = Math.max(70, dropHeight * 0.72);
+              if (lowerPlat && (lowerPlat.x + lowerPlat.w - p.x) > minRunwayNeeded) {
+                inp.left = false;
+                inp.right = false;
+                inp.down = true;
+                inp.jump = true;
+                inp.jumpPressed = true;
+                return inp;
+              }
+            }
+
+            // Check if ground continues gently within [p.y - 10, p.y + 95] without lava
+            const gentleNext = level.resolveLanding(platRight + 26, p.y - 12, p.y + 98);
+            const safeContinuation = gentleNext && gentleNext.type !== "moving" && Math.abs(gentleNext.y - plat.y) <= 8 && !level.getLavaAt(platRight + 26, gentleNext.y + 4) && gentleNext.y < HEIGHT - 16;
+
+            if (!safeContinuation) {
+              // Either a chasm, a lava gap, or a step-up cliff (e.g. y=515 -> y=445)!
+              // Verify a landing target exists within jump span (60..225px ahead) or wait for moving lift!
+              let jumpReachable = false;
+              for (let probe = 65; probe <= 220; probe += 30) {
+                if (this._hasSafeGround(level, p.x + probe, p.y - 45)) {
+                  jumpReachable = true;
+                  break;
+                }
+              }
+              if (jumpReachable) {
+                inp.down = false;
+                inp.jump = true;
+                inp.jumpPressed = true;
+              } else {
+                // Moving hover-lift is currently out of range -> wait at cliff edge!
+                this.stuckTimer = 0;
+                this.stationTimer = 0;
+                inp.right = false;
+                inp.dash = false;
+                inp.dashPressed = false;
+                if (distToEdge < 18) inp.left = true;
+              }
+            }
+          }
+        }
+
+        // Mid-air over or near chasm / cliff lip: preserve forward crossing momentum, but fall straight if dropping through ledge!
+        if (!p.onGround) {
+          if (p.ignoreTimer > 0) {
+            inp.left = false;
+            inp.right = false;
+          } else {
+            inp.left = false;
+            inp.right = true;
+          }
+        }
+
+        // Unstuck hop if genuinely blocked for > 26 frames while trying to move
+        if (p.onGround && inp.right && this.stuckTimer > 26) {
+          inp.jump = true;
+          inp.jumpPressed = true;
+          this.stuckTimer = 0;
+        }
       }
 
-      // 10. Emergency Pit Bounce
-      if (p.y > ns.CONFIG.HEIGHT - 85) {
-        p.vy = -12.5;
-        p.y = Math.min(p.y, ns.CONFIG.HEIGHT - 90);
-        inp.jump = true;
-        inp.jumpPressed = true;
+      // ----------------------------------------------------------------------
+      // 6) Human Burst-Fire Cadence
+      // ----------------------------------------------------------------------
+      if (inp._suppressFire) wantFire = false;
+      this.burstCycle = (this.burstCycle + 1) % 32;
+      const inBurstWindow = isBossFight || this.burstCycle < 27;
+      if (wantFire && inBurstWindow) {
+        inp.fire = true;
+        inp.firePressed = (frameCount % 4 === 0);
       }
 
       return inp;
+    }
+
+    _executeBossTactics(p, level, entities, boss, cameraX, frameCount, inp, proneEnemy, destructibleOrb) {
+      const stage = this.game.stageNum;
+
+      // Priority 0: If Boss 5 spawned an alien crawler on our floor, prone-kill it immediately!
+      if (proneEnemy && proneEnemy.e.type === 'alien' && p.onGround && Math.abs(proneEnemy.dx) < 380) {
+        const wantDir = proneEnemy.dx >= 0 ? 1 : -1;
+        if (p.facing !== wantDir) {
+          if (wantDir > 0) inp.right = true; else inp.left = true;
+        } else {
+          inp.left = false;
+          inp.right = false;
+          inp.down = true;
+        }
+        return;
+      }
+
+      if (stage === 1) {
+        // BOSS 1 (Titan Wall): Take out twin mortar cannons (y=390) with 45° up-right from x~7145, then blast lower core (y=545)!
+        const cannonsAlive = boss.cannons && boss.cannons.some((c) => c.alive);
+        if (cannonsAlive) {
+          if (p.x < 7125) {
+            inp.right = true;
+            inp.up = p.x > 7040;
+          } else if (p.x > 7205) {
+            inp.left = true;
+            inp._suppressFire = true;
+          } else {
+            if ((frameCount % 10) < 7) { inp.right = true; inp.up = true; }
+            else { inp.left = true; inp._suppressFire = true; }
+          }
+        } else {
+          // Core at (7355, 545, r=46): standing straight shots on floor (oy=582) hit core dead center!
+          if (p.y < 600 && p.onGround && p.currentPlatform && p.currentPlatform.droppable) {
+            inp.left = false;
+            inp.right = false;
+            inp.down = true;
+            inp.jump = true;
+            inp.jumpPressed = true;
+          } else if (p.x < 6940) {
+            inp.right = true;
+          } else if (p.x > 7120) {
+            inp.left = true;
+            inp._suppressFire = true;
+          } else if (p.facing < 0) {
+            inp.right = true;
+          }
+          if (p.grenades > 0 && p.grenadeCooldown <= 0 && frameCount % 40 === 0 && p.x > 6960 && p.x < 7110) {
+            inp.down = true; // Low-arc grenade straight into core!
+            inp.grenade = true;
+            inp.grenadePressed = true;
+          }
+        }
+      } else if (stage === 2) {
+        // BOSS 2 (Omega Spider Mech): Climb left tactical ledge (x:6220..6460, y=515) where straight shots (oy=461) hit Spider (y=430, r=72) & Seeker Orbs at ANY distance!
+        const dx = boss.x - p.x;
+        const onMidLedge = p.onGround && Math.abs(p.y - 515) < 16 && p.x >= 6215 && p.x <= 6465;
+
+        if (p.onGround && p.y < 460 && p.currentPlatform && p.currentPlatform.droppable) {
+          // Immediately drop back down from y=400/295 onto y=515 firing ledge!
+          inp.left = false;
+          inp.right = false;
+          inp.down = true;
+          inp.jump = true;
+          inp.jumpPressed = true;
+        } else if (onMidLedge) {
+          if (p.x < 6285) inp.right = true;
+          else if (p.x > 6415) { inp.left = true; inp._suppressFire = true; }
+          else if (p.facing < 0) inp.right = true;
+        } else if (p.y > 560 && dx > 250) {
+          if (p.x < 6305) inp.right = true;
+          else if (p.x > 6400) { inp.left = true; inp._suppressFire = true; }
+          else if (p.onGround) { inp.jump = true; inp.jumpPressed = true; }
+        } else {
+          if (dx > 0 && dx < 230 && p.x < cameraX + 240) {
+            inp.right = true;
+            if (p.onGround) { inp.jump = true; inp.jumpPressed = true; }
+            if (p.dashCooldown <= 0) { inp.dash = true; inp.dashPressed = true; }
+          } else if (Math.abs(dx) < 260) {
+            if (dx > 0) { inp.left = true; inp._suppressFire = true; } else inp.right = true;
+          } else {
+            if ((frameCount % 8) < 6) { inp.right = dx > 0; inp.left = dx < 0; inp.up = true; }
+            else { inp.left = dx > 0; inp.right = dx < 0; inp._suppressFire = true; }
+          }
+        }
+      } else if (stage === 3) {
+        // BOSS 3 (Valkyrie Gunship): Hold tactical cover under the center helipad canopy (x:6765..6935, y=636) which blocks overhead carpet bombs, firing 90°/45° up!
+        const dx = boss.x - p.x;
+        if (p.y < 590 && p.onGround && p.currentPlatform && p.currentPlatform.droppable) {
+          inp.left = false;
+          inp.right = false;
+          inp.down = true;
+          inp.jump = true;
+          inp.jumpPressed = true;
+        } else if (p.x < 6765) {
+          inp.right = true;
+          inp.up = Math.abs(dx) < 420;
+        } else if (p.x > 6935) {
+          inp.left = true;
+          inp.up = Math.abs(dx) < 420;
+        } else if (Math.abs(dx) <= 145) {
+          // Gunship overhead -> 90° straight up!
+          inp.left = false;
+          inp.right = false;
+          inp.up = true;
+        } else if (dx > 145 && dx < 540) {
+          // Balanced zero-drift micro-step for 45° up-right so we stay under canopy cover!
+          if ((frameCount % 8) < 5) { inp.right = true; inp.up = true; }
+          else { inp.left = true; inp._suppressFire = true; }
+        } else if (dx < -145 && dx > -540) {
+          if ((frameCount % 8) < 5) { inp.left = true; inp.up = true; }
+          else { inp.right = true; inp._suppressFire = true; }
+        } else {
+          inp.up = true;
+        }
+                  } else if (stage === 4) {
+        // BOSS 4 (Magma Dragon): Caldera floor (x: 6660..6780, y=630) under mid ledge (y=395)
+        // continuous 45° up-right assault into Dragon Head & Armored Spine!
+        if (p.onGround && p.y < 580 && p.currentPlatform && p.currentPlatform.droppable) {
+          inp.left = false; inp.right = false;
+          inp.down = true; inp.jump = true; inp.jumpPressed = true;
+        } else if (p.x < 6660) {
+          inp.right = true; inp.up = true;
+        } else if (p.x > 6780) {
+          inp.left = true; inp.up = true;
+        } else {
+          if ((frameCount % 8) < 6) { inp.right = true; inp.up = true; }
+          else { inp.left = true; inp.up = true; }
+          if (p.grenades > 0 && p.grenadeCooldown <= 0 && frameCount % 36 === 0) {
+            inp.up = true; inp.grenade = true; inp.grenadePressed = true;
+          }
+        }
+      } else {
+        // BOSS 5 (Emperor Gava 2-Phase):
+        // Phase 1 -> 45° up-right into Emperor Gava Skull (7430, 340) & Tentacles from floor (x: 7040..7160) or y=405 ledge!
+        // Phase 2 -> Straight right fire & grenades into Red Falcon Heart (7435, 536) from floor (x: 6960..7100)!
+        if (!boss.phase2) {
+          if (p.onGround && p.y < 350 && p.currentPlatform && p.currentPlatform.droppable) {
+            inp.left = false; inp.right = false;
+            inp.down = true; inp.jump = true; inp.jumpPressed = true;
+          } else if (p.onGround && Math.abs(p.y - 405) < 16) {
+            // High firing platform
+            if (p.x < 6960) inp.right = true;
+            else if (p.x > 7110) inp.left = true;
+            else if (p.facing < 0) inp.right = true;
+          } else {
+            // Floor (y=636) 45° up-right barrage!
+            if (p.x < 7040) { inp.right = true; inp.up = true; }
+            else if (p.x > 7160) { inp.left = true; inp.up = true; }
+            else {
+              if ((frameCount % 8) < 6) { inp.right = true; inp.up = true; }
+              else { inp.left = true; inp.up = true; }
+            }
+          }
+        } else {
+          // Phase 2: Heart (y=536) - drop to floor and blast straight right!
+          if (p.y < 580 && p.onGround && p.currentPlatform && p.currentPlatform.droppable) {
+            inp.left = false; inp.right = false;
+            inp.down = true; inp.jump = true; inp.jumpPressed = true;
+          } else if (p.x < 6960) {
+            inp.right = true;
+          } else if (p.x > 7100) {
+            inp.left = true;
+          } else if (p.facing < 0) {
+            inp.right = true;
+          }
+          if (p.grenades > 0 && p.grenadeCooldown <= 0 && p.x > 6960 && p.x < 7100 && frameCount % 36 === 0) {
+            inp.down = true; inp.grenade = true; inp.grenadePressed = true;
+          }
+        }
+      }
+
+      if (destructibleOrb && destructibleOrb.dist < 190 && destructibleOrb.y < p.y - 75) {
+        inp.up = true;
+      }
+    }
+
+    _evadeIncomingThreats(p, level, entities, boss, cameraX, inp) {
+      // Mid-air over or near chasm / cliff lip: NEVER cancel forward jump momentum!
+      if (!p.onGround && (!this._hasSafeGround(level, p.x - 54, p.y) || !this._hasSafeGround(level, p.x + 54, p.y))) {
+        if (p.vx >= -0.2) {
+          inp.right = true;
+          inp.left = false;
+        }
+        if (p.dashCooldown <= 0) {
+          for (let i = 0; i < entities.enemyBullets.length; i++) {
+            const eb = entities.enemyBullets[i];
+            if (Math.hypot((eb.x + eb.vx * 5) - p.x, (eb.y + eb.vy * 5) - (p.y - 36)) < 42) {
+              inp.dash = true;
+              inp.dashPressed = true;
+              break;
+            }
+          }
+        }
+        return;
+      }
+
+      let urgentThreat = null;
+      let highBulletOnly = true;
+      let anyHitStanding = false;
+      let anyHitProne = false;
+      let fallingThreat = null;
+
+      for (let i = 0; i < entities.enemyBullets.length; i++) {
+        const eb = entities.enemyBullets[i];
+        const r = (eb.radius || 8) + 6;
+        const rProne = (eb.radius || 8) + 2;
+        const grav = eb.gravity || 0;
+        const maxT = grav > 0 ? 38 : 19;
+        let prevBy = eb.y;
+        let recordedStandForEb = false;
+
+        for (let t = 1; t <= maxT; t++) {
+          const bx = eb.x + eb.vx * t;
+          const by = eb.y + eb.vy * t + 0.5 * grav * t * t;
+
+          // Gravity bombs / mortars explode on overhead ledges before reaching below!
+          if (grav > 0 && by > prevBy && level.resolveLanding(bx, prevBy, by)) {
+            if (by < p.y - 80) break;
+          }
+          prevBy = by;
+
+          const xPad = grav > 0 ? 28 : 19;
+          const hitXStand = bx + r >= p.x - xPad && bx - r <= p.x + xPad;
+          const hitYStand = by + r >= p.y - 75 && by - r <= p.y - 2;
+          const hitXProne = bx + rProne >= p.x - 26 && bx - rProne <= p.x + 26;
+          const hitYProne = by + rProne >= p.y - 22 && by - rProne <= p.y - 2;
+
+          if (hitXProne && hitYProne) {
+            anyHitStanding = true;
+            anyHitProne = true;
+            highBulletOnly = false;
+          }
+
+          if (hitXStand && hitYStand) {
+            anyHitStanding = true;
+            if (by + rProne >= p.y - 22) {
+              highBulletOnly = false;
+            }
+            if (!recordedStandForEb) {
+              recordedStandForEb = true;
+              if (grav > 0 || Math.abs(eb.vy) > Math.abs(eb.vx) * 1.15) {
+                if (!fallingThreat || t < fallingThreat.t) {
+                  fallingThreat = { eb, bx, by, t };
+                }
+              }
+              if (!urgentThreat || t < urgentThreat.t) {
+                urgentThreat = { eb, bx, by, t, grav };
+              }
+            }
+          }
+        }
+      }
+
+      // Check close contact with rushing / leaping / approaching enemies
+      for (let i = 0; i < entities.enemies.length; i++) {
+        const e = entities.enemies[i];
+        if (e.type === 'barrel' || e.type === 'turret' || (e.type === 'cannon' && e.riseProgress < 0.7)) continue;
+        const nextEx = e.x + (e.vx || 0) * 10;
+        if (Math.abs(nextEx - p.x) < 48 && Math.abs(e.y - p.y) < 58) {
+          if (p.onGround) {
+            const nearCliff = p.currentPlatform && (p.currentPlatform.x + p.currentPlatform.w - p.x < 160) && !this._hasSafeGround(level, p.currentPlatform.x + p.currentPlatform.w + 20, p.y);
+            if (e.x < p.x && nearCliff) {
+              inp.right = true;
+              inp.left = false;
+              continue;
+            }
+            inp.down = false;
+            inp.jump = true;
+            inp.jumpPressed = true;
+            if (e.x > p.x && this._canStepLeft(p, level, cameraX, 40)) {
+              inp.left = true;
+              inp.right = false;
+            }
+          } else if (p.dashCooldown <= 0) {
+            inp.dash = true;
+            inp.dashPressed = true;
+          }
+          return;
+        }
+      }
+
+      // Check Boss contact / whipping tentacle boxes
+      if (boss && boss.active && boss.getHazardBoxes) {
+        const boxes = boss.getHazardBoxes();
+        for (let i = 0; i < boxes.length; i++) {
+          const b = boxes[i];
+          const cx = b.x + b.w * 0.5;
+          if (p.x + 24 > b.x && p.x - 24 < b.x + b.w && p.y > b.y - 10 && p.y - 74 < b.y + b.h) {
+            inp.down = false;
+            if (cx > p.x && p.x > cameraX + 80) { inp.left = true; inp.right = false; }
+            else { inp.right = true; inp.left = false; }
+            if (p.dashCooldown <= 0) { inp.dash = true; inp.dashPressed = true; }
+            return;
+          }
+        }
+      }
+
+      if (!anyHitStanding) return;
+
+      // 1) If ducking prone completely avoids the bullet(s), DUCK PRONE instead of bunny-hopping!
+      if (p.onGround && !p.inWater && highBulletOnly && !anyHitProne && !(p.currentPlatform && p.currentPlatform.type === 'bridge')) {
+        inp.left = false;
+        inp.right = false;
+        inp.up = false;
+        inp.down = true;
+        inp.jump = false;
+        inp.jumpPressed = false;
+        return;
+      }
+
+      const bossArena = !!(boss && boss.active);
+      const maxRightX = bossArena
+        ? (this.game.stageNum === 4 ? 6820 : (this.game.stageNum === 5 ? 7065 : (this.game.stageNum === 3 ? 6945 : cameraX + WIDTH - 260)))
+        : (cameraX + WIDTH - 160);
+      const minLeftX = (bossArena && this.game.stageNum === 4) ? 6455 : (cameraX + 46);
+
+      // 2) Falling mortar / carpet bomb / steep vertical shot: sidestep OPPOSITE diagonal motion (never run along the bullet ray!)
+      if (fallingThreat) {
+        inp.down = false;
+        const eb = fallingThreat.eb;
+        const canLeft = p.x > minLeftX && this._canStepLeft(p, level, cameraX, 52);
+        const canRight = p.x < maxRightX && !!this._hasSafeGround(level, p.x + 52, p.y);
+        let goLeft = p.x < fallingThreat.bx;
+        if ((goLeft && canLeft) || !canRight) {
+          inp.left = canLeft;
+          inp.right = false;
+        } else {
+          inp.right = true;
+          inp.left = false;
+        }
+        if (fallingThreat.t <= 8 && p.dashCooldown <= 0 && (inp.left || inp.right)) {
+          inp.dash = true;
+          inp.dashPressed = true;
+        }
+        return;
+      }
+
+      // 3) Low horizontal / fan / rising shot: timed jump (3..15 frames ahead) or invincible Jet-Dash!
+      if (urgentThreat && urgentThreat.t <= 16) {
+        inp.down = false;
+        const canDash = p.dashCooldown <= 0;
+        const risingFromBelow = urgentThreat.eb.vy < -2.0;
+        const airBlocked = canDash && entities.enemyBullets.some(
+          (eb) => Math.abs((eb.x + eb.vx * 10) - p.x) < 42 && (eb.y + eb.vy * 10) < p.y - 56 && (eb.y + eb.vy * 10) > p.y - 140
+        );
+        const downwardAngle = urgentThreat.eb.vy > 1.0;
+        const nearCliffEdge = p.onGround && p.currentPlatform && (p.currentPlatform.x + p.currentPlatform.w - p.x < 160) && !this._hasSafeGround(level, p.currentPlatform.x + p.currentPlatform.w + 20, p.y);
+        if (p.onGround && urgentThreat.t >= 3 && !airBlocked && !risingFromBelow && !downwardAngle && !nearCliffEdge) {
+          inp.jump = true;
+          inp.jumpPressed = true;
+        } else if (canDash && urgentThreat.t <= 11) {
+          const safeLeft = p.x > minLeftX + 60 && this._canStepLeft(p, level, cameraX, 115);
+          const safeRight = p.x < maxRightX - 40 && this._hasSafeGround(level, p.x + 115, p.y);
+          if (urgentThreat.eb.vx < 0 && safeLeft) { inp.left = true; inp.right = false; }
+          else if (safeRight) { inp.right = true; inp.left = false; }
+          if (inp.left || inp.right) {
+            inp.dash = true;
+            inp.dashPressed = true;
+          }
+        } else if (risingFromBelow && p.onGround) {
+          // Never jump upward into a rising bullet from below -> step opposite horizontal velocity!
+          if (urgentThreat.eb.vx > 0 && this._canStepLeft(p, level, cameraX, 36)) {
+            inp.left = true;
+            inp.right = false;
+          } else {
+            inp.right = true;
+            inp.left = false;
+          }
+        }
+      }
     }
   }
 

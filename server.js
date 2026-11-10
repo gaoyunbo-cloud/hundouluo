@@ -245,11 +245,11 @@ function handleClientMessage(client, payloadBuf) {
     const code = String(msg.code || '').trim();
     const room = rooms.get(code);
     if (!room || !room.host || room.host.closed) {
-      sendJson(client, { t: 'error', message: '房间不存在或房主已离线，请核对6位房间码' });
+      sendJson(client, { t: 'error', message: 'Room not found or host is offline. Please check the 6-digit code.' });
       return;
     }
     if (room.guest && !room.guest.closed) {
-      sendJson(client, { t: 'error', message: '该房间已满员（2/2）' });
+      sendJson(client, { t: 'error', message: 'Room is already full (2/2 players).' });
       return;
     }
     cleanupClient(client);
@@ -279,7 +279,7 @@ function cleanupClient(client) {
 
   if (role === 'host') {
     if (room.guest && !room.guest.closed) {
-      sendJson(room.guest, { t: 'peer_left', message: '房主 (1P) 已断开连接' });
+      sendJson(room.guest, { t: 'peer_left', message: 'Host (1P) disconnected' });
       room.guest.roomCode = null;
       room.guest.role = null;
     }
@@ -287,7 +287,7 @@ function cleanupClient(client) {
   } else if (role === 'guest') {
     room.guest = null;
     if (room.host && !room.host.closed) {
-      sendJson(room.host, { t: 'peer_left', message: '队友 (2P) 已离开房间' });
+      sendJson(room.host, { t: 'peer_left', message: 'Partner (2P) left the room' });
     }
   }
 }
@@ -319,12 +319,12 @@ if (require.main === module) {
   server.listen(PORT, '0.0.0.0', () => {
     const ips = getLocalIPs();
     console.log('==============================================================');
-    console.log('  CONTRA: SHATTERED OPS HD - 跨网络实时双人联机服务器已启动!');
+    console.log('  CONTRA: SHATTERED OPS HD - Online Co-op Relay Server Ready!');
     console.log('==============================================================');
-    console.log(`  本机访问:   http://localhost:${PORT}`);
-    ips.forEach((ip) => console.log(`  局域网访问: http://${ip}:${PORT}`));
+    console.log(`  Local URL:  http://localhost:${PORT}`);
+    ips.forEach((ip) => console.log(`  LAN URL:    http://${ip}:${PORT}`));
     console.log('--------------------------------------------------------------');
-    console.log(`  异地跨网络联机 (免安装公网隧道命令):`);
+    console.log(`  Public Tunnel Command (Zero-install cross-network co-op):`);
     console.log(`  ssh -R 80:localhost:${PORT} nokey@localhost.run`);
     console.log('==============================================================');
   });

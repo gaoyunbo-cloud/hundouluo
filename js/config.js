@@ -38,8 +38,8 @@ window.Contra = window.Contra || {};
     DIFFICULTIES: [
       {
         id: 'normal',
-        name: 'NORMAL · 铁血战士',
-        desc: '每条命含3格防弹护甲 · 标准弹幕强度',
+        name: 'NORMAL · COMMANDO',
+        desc: '3 Armor Bars per Life · Standard Barrage',
         maxHp: 3,
         enemyHpMult: 1.0,
         bulletSpeedMult: 1.0,
@@ -48,8 +48,8 @@ window.Contra = window.Contra || {};
       },
       {
         id: 'hard',
-        name: 'HARD · 狂暴精英',
-        desc: '每条命2格护甲 · 敌军高射速与强化装甲',
+        name: 'HARD · VETERAN ELITE',
+        desc: '2 Armor Bars per Life · Fast Enemy Fire & Heavy Armor',
         maxHp: 2,
         enemyHpMult: 1.3,
         bulletSpeedMult: 1.18,
@@ -58,8 +58,8 @@ window.Contra = window.Contra || {};
       },
       {
         id: 'nightmare',
-        name: 'NIGHTMARE · 经典一击必杀',
-        desc: '无护甲一击必死 · 极限硬核弹幕 · 双倍得分',
+        name: 'NIGHTMARE · ONE-HIT DIE',
+        desc: '1-Hit Instant Death · Hardcore Bullet Hell · 2x Score',
         maxHp: 1,
         enemyHpMult: 1.5,
         bulletSpeedMult: 1.32,
@@ -72,7 +72,7 @@ window.Contra = window.Contra || {};
     WEAPONS: {
       R: {
         id: 'R',
-        name: '突击步枪',
+        name: 'ASSAULT CARBINE',
         short: 'CARBINE',
         cooldown: 9,
         lv2Cooldown: 6,
@@ -85,7 +85,7 @@ window.Contra = window.Contra || {};
       },
       M: {
         id: 'M',
-        name: '火神加特林',
+        name: 'VULCAN GATLING',
         short: 'VULCAN',
         cooldown: 5,
         lv2Cooldown: 3,
@@ -98,7 +98,7 @@ window.Contra = window.Contra || {};
       },
       S: {
         id: 'S',
-        name: '高能散弹炮',
+        name: 'SPREAD CANNON',
         short: 'SPREAD',
         cooldown: 13,
         lv2Cooldown: 11,
@@ -113,7 +113,7 @@ window.Contra = window.Contra || {};
       },
       L: {
         id: 'L',
-        name: '电磁轨道激光',
+        name: 'RAILGUN LASER',
         short: 'RAILGUN',
         cooldown: 15,
         lv2Cooldown: 11,
@@ -127,7 +127,7 @@ window.Contra = window.Contra || {};
       },
       F: {
         id: 'F',
-        name: '凝固汽油烈焰',
+        name: 'SPIRAL NAPALM',
         short: 'NAPALM',
         cooldown: 12,
         lv2Cooldown: 9,
@@ -142,7 +142,7 @@ window.Contra = window.Contra || {};
       },
       C: {
         id: 'C',
-        name: '蜂群追踪导弹',
+        name: 'SWARM HOMING',
         short: 'HOMING',
         cooldown: 13,
         lv2Cooldown: 9,

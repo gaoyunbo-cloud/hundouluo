@@ -24,12 +24,12 @@ window.Contra = window.Contra || {};
   }
 
   // ==========================================================================
-  // BOSS 1: TITAN FORTRESS WALL (泰坦要塞巨炮阵)
+  // BOSS 1: TITAN FORTRESS WALL
   // ==========================================================================
   class TitanWallBoss {
     constructor(hpMult = 1) {
       this.name = 'TITAN FORTRESS WALL';
-      this.cnName = '泰坦要塞巨炮阵';
+      this.cnName = 'TITAN FORTRESS WALL';
       this.wallX = 7320;
       this.floorY = 636;
 
@@ -275,12 +275,12 @@ window.Contra = window.Contra || {};
   }
 
   // ==========================================================================
-  // BOSS 2: OMEGA SPIDER MECH (欧米茄重装蜘蛛机甲)
+  // BOSS 2: OMEGA SPIDER MECH
   // ==========================================================================
   class SpiderMechBoss {
     constructor(hpMult = 1) {
       this.name = 'OMEGA SPIDER MECH';
-      this.cnName = '欧米茄重装蜘蛛机甲';
+      this.cnName = 'OMEGA SPIDER MECH';
       this.x = 7080;
       this.y = 435;
       this.floorY = 636;
@@ -445,12 +445,12 @@ window.Contra = window.Contra || {};
   }
 
   // ==========================================================================
-  // BOSS 3: VALKYRIE ASSAULT GUNSHIP (女武神重型武装战机)
+  // BOSS 3: VALKYRIE ASSAULT GUNSHIP
   // ==========================================================================
   class ValkyrieGunshipBoss {
     constructor(hpMult = 1) {
       this.name = 'VALKYRIE ASSAULT GUNSHIP';
-      this.cnName = '女武神重型武装战机';
+      this.cnName = 'VALKYRIE ASSAULT GUNSHIP';
       this.x = 7100;
       this.y = 205;
       this.vx = -4.2;
@@ -609,19 +609,19 @@ window.Contra = window.Contra || {};
   }
 
   // ==========================================================================
-  // BOSS 4: MAGMA LEVIATHAN DRAGON (熔岩机械魔龙·利维坦)
+  // BOSS 4: MAGMA LEVIATHAN DRAGON
   // ==========================================================================
   class MagmaDragonBoss {
     constructor(hpMult = 1) {
       this.name = 'MAGMA LEVIATHAN DRAGON';
-      this.cnName = '熔岩机械魔龙·利维坦';
+      this.cnName = 'MAGMA LEVIATHAN DRAGON';
       this.anchorX = 7420;
       this.anchorY = 560;
-      this.head = { x: 7040, y: 340, r: 56 };
+      this.head = { x: 7040, y: 340, r: 64 };
       this.segments = [];
 
-      this.hp = 205 * hpMult;
-      this.maxHp = 205 * hpMult;
+      this.hp = 165 * hpMult;
+      this.maxHp = 165 * hpMult;
       this.flash = 0;
       this.breathCd = 68;
       this.meteorCd = 95;
@@ -633,7 +633,15 @@ window.Contra = window.Contra || {};
     }
 
     getHealthRatio() { return Math.max(0, this.hp / this.maxHp); }
-    getTargetPoints() { return [{ x: this.head.x, y: this.head.y }]; }
+    getTargetPoints() {
+      const pts = [{ x: this.head.x, y: this.head.y }];
+      if (this.segments) {
+        for (let i = 0; i < this.segments.length; i += 2) {
+          pts.push({ x: this.segments[i].x, y: this.segments[i].y });
+        }
+      }
+      return pts;
+    }
     getHazardBoxes() {
       if (!this.active || this.dying || this.dead) return [];
       return [{ x: this.head.x - 42, y: this.head.y - 42, w: 84, h: 84 }];
@@ -716,7 +724,17 @@ window.Contra = window.Contra || {};
 
       for (let j = entities.playerBullets.length - 1; j >= 0; j--) {
         const b = entities.playerBullets[j];
-        if (Math.hypot(b.x - this.head.x, b.y - this.head.y) <= this.head.r + b.radius) {
+        let hit = Math.hypot(b.x - this.head.x, b.y - this.head.y) <= this.head.r + b.radius;
+        if (!hit && this.segments) {
+          for (let sIdx = 0; sIdx < this.segments.length; sIdx++) {
+            const sg = this.segments[sIdx];
+            if (Math.hypot(b.x - sg.x, b.y - sg.y) <= sg.r + b.radius) {
+              hit = true;
+              break;
+            }
+          }
+        }
+        if (hit) {
           if (b.hitSet && b.hitSet.has(this)) continue;
           particles.spawnHitSparks(b.x, b.y, 8, '#ff9100');
           ns.audio.sfx('hitArmor');
@@ -780,7 +798,7 @@ window.Contra = window.Contra || {};
   class EmperorGavaBoss {
     constructor(hpMult = 1) {
       this.name = 'EMPEROR GAVA · RED FALCON';
-      this.cnName = '终极双形态：天王鬼·红隼异形帝王';
+      this.cnName = 'EMPEROR GAVA · RED FALCON SUPREME';
       this.wallX = 7440;
       this.floorY = 636;
       this.hpMult = hpMult;

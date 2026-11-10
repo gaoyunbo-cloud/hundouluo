@@ -37,7 +37,7 @@ window.Contra = window.Contra || {};
       let idx = 0;
       function tryNext() {
         if (idx >= PEERJS_CDNS.length) {
-          reject(new Error('无法加载 WebRTC P2P 组件，请检查网络或改用 WebSocket 服务器模式'));
+          reject(new Error('Failed to load WebRTC P2P module. Check network or switch to WebSocket Server mode.'));
           return;
         }
         const s = document.createElement('script');
@@ -61,7 +61,7 @@ window.Contra = window.Contra || {};
       this.transport = 'auto';      // 'ws' | 'p2p'
       this.roomCode = '';
       this.status = 'offline';      // 'offline' | 'connecting' | 'waiting' | 'connected' | 'error'
-      this.statusText = '未连接';
+      this.statusText = 'Not Connected';
       this.rttMs = 0;
 
       this.ws = null;
@@ -182,7 +182,7 @@ window.Contra = window.Contra || {};
         ns.audio.stopBGM();
         this.game.state = 'title';
       }
-      this._setStatus('offline', reasonText || '已断开联机');
+      this._setStatus('offline', reasonText || 'Disconnected');
     }
 
     // ========================================================================
@@ -197,7 +197,7 @@ window.Contra = window.Contra || {};
 
       this.transport = mode;
       this.role = 'host';
-      this._setStatus('connecting', '正在创建跨网络房间...');
+      this._setStatus('connecting', 'Creating cross-network room...');
 
       if (mode === 'ws') {
         this._connectWs('create');
@@ -209,7 +209,7 @@ window.Contra = window.Contra || {};
     async joinRoom(code, preferredMode, wsUrlOverride) {
       const cleanCode = String(code || '').replace(/\D/g, '').slice(0, 6);
       if (cleanCode.length !== 6) {
-        this._setStatus('error', '请输入正确的 6 位数字房间码');
+        this._setStatus('error', 'Please enter a valid 6-digit room code');
         return;
       }
 
@@ -222,7 +222,7 @@ window.Contra = window.Contra || {};
       this.transport = mode;
       this.role = 'guest';
       this.roomCode = cleanCode;
-      this._setStatus('connecting', `正在连接房间 ${cleanCode}...`);
+      this._setStatus('connecting', `Connecting to room ${cleanCode}...`);
 
       if (mode === 'ws') {
         this._connectWs('join', cleanCode);
@@ -240,7 +240,7 @@ window.Contra = window.Contra || {};
       try {
         ws = new WebSocket(url);
       } catch (e) {
-        this._setStatus('error', `无法连接服务器: ${url}`);
+        this._setStatus('error', `Cannot connect to server: ${url}`);
         return;
       }
       this.ws = ws;
@@ -261,7 +261,7 @@ window.Contra = window.Contra || {};
 
       ws.onerror = () => {
         if (!this.active) {
-          this._setStatus('error', `WebSocket 连接失败 (${url})，可切换至云端 P2P 模式`);
+          this._setStatus('error', `WebSocket connection failed (${url}). You can switch to Cloud P2P mode.`);
         }
       };
 
@@ -269,7 +269,7 @@ window.Contra = window.Contra || {};
         if (this.ws === ws) {
           this.ws = null;
           if (this.status !== 'error') {
-            this.disconnect('与联机服务器的连接已关闭');
+            this.disconnect('Connection to relay server closed');
           }
         }
       };
@@ -297,7 +297,7 @@ window.Contra = window.Contra || {};
 
       peer.on('open', () => {
         this.roomCode = code;
-        this._setStatus('waiting', `房间已就绪 (${code})，等待 2P 队友加入...`);
+        this._setStatus('waiting', `Room Ready (${code}) — Waiting for 2P partner to join...`);
       });
 
       peer.on('connection', (conn) => {
@@ -314,7 +314,7 @@ window.Contra = window.Contra || {};
           this._createP2PRoom();
           return;
         }
-        this._setStatus('error', 'P2P 信令异常: ' + (err && err.type ? err.type : '连接失败'));
+        this._setStatus('error', 'P2P signaling error: ' + (err && err.type ? err.type : 'Connection failed'));
       });
     }
 
@@ -343,8 +343,8 @@ window.Contra = window.Contra || {};
 
       peer.on('error', (err) => {
         const msg = err && err.type === 'peer-unavailable'
-          ? `未找到房间 ${code}，请确认房主已创建且处于云端 P2P 模式`
-          : 'P2P 连接失败: ' + (err && err.type ? err.type : '网络受限');
+          ? `Room ${code} not found. Verify host created room in Cloud P2P mode.`
+          : 'P2P connection error: ' + (err && err.type ? err.type : 'Network restricted');
         this._setStatus('error', msg);
       });
     }
@@ -361,10 +361,10 @@ window.Contra = window.Contra || {};
         }
       });
       conn.on('close', () => {
-        this.disconnect('对方已离开联机房间');
+        this.disconnect('Partner left the online session');
       });
       conn.on('error', () => {
-        this.disconnect('P2P 数据通道中断');
+        this.disconnect('P2P data channel interrupted');
       });
     }
 
@@ -384,8 +384,8 @@ window.Contra = window.Contra || {};
       this._localSeq = { fs: 0, js: 0, ds: 0, gs: 0, ss: 0 };
       this._eventQueue = [];
 
-      const roleLabel = this.role === 'host' ? '1P 比尔 (房主)' : '2P 兰斯 (客机)';
-      this._setStatus('connected', `跨网络联机成功！当前身份：${roleLabel}`);
+      const roleLabel = this.role === 'host' ? '1P BILL (HOST)' : '2P LANCE (GUEST)';
+      this._setStatus('connected', `Online Co-op Connected! Role: ${roleLabel}`);
 
       if (this._pingTimer) clearInterval(this._pingTimer);
       this._pingTimer = setInterval(() => {
@@ -414,7 +414,7 @@ window.Contra = window.Contra || {};
       switch (msg.t) {
         case 'created':
           this.roomCode = msg.code;
-          this._setStatus('waiting', `房间已创建 (${msg.code})，等待 2P 队友加入...`);
+          this._setStatus('waiting', `Room Created (${msg.code}) — Waiting for 2P partner to join...`);
           break;
 
         case 'joined':
@@ -427,11 +427,11 @@ window.Contra = window.Contra || {};
           break;
 
         case 'peer_left':
-          this.disconnect(msg.message || '队友已断开连接');
+          this.disconnect(msg.message || 'Partner disconnected');
           break;
 
         case 'error':
-          this._setStatus('error', msg.message || '联机发生错误');
+          this._setStatus('error', msg.message || 'Online session error');
           break;
 
         case 'p':

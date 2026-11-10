@@ -14,14 +14,14 @@ window.Contra = window.Contra || {};
   // ==========================================================================
   const STAGE_DEFS = {
     // ------------------------------------------------------------------------
-    // STAGE 1: JUNGLE WATERFALL (热带雨林·断桥突袭)
+    // STAGE 1: JUNGLE WATERFALL
     // ------------------------------------------------------------------------
     1: {
       id: 1,
       theme: 'jungle',
       bgm: 'jungle',
       name: 'STAGE 1 · JUNGLE WATERFALL',
-      cnName: '第一关：热带雨林·断桥突袭',
+      cnName: 'GALUGA JUNGLE · WATERFALL ASSAULT',
       length: 7680,
       bossLockX: 6400,
       bossType: 'titanWall',
@@ -117,14 +117,14 @@ window.Contra = window.Contra || {};
     },
 
     // ------------------------------------------------------------------------
-    // STAGE 2: CYBERNETIC FACTORY (赛博基地·高压走廊)
+    // STAGE 2: CYBERNETIC FACTORY
     // ------------------------------------------------------------------------
     2: {
       id: 2,
       theme: 'cyber',
       bgm: 'cyber',
       name: 'STAGE 2 · CYBERNETIC FACTORY',
-      cnName: '第二关：赛博基地·高压走廊',
+      cnName: 'CYBERNETIC FACTORY · HIGH-VOLTAGE SECTOR',
       length: 7400,
       bossLockX: 6120,
       bossType: 'spiderMech',
@@ -202,14 +202,14 @@ window.Contra = window.Contra || {};
     },
 
     // ------------------------------------------------------------------------
-    // STAGE 3: ARCTIC BLIZZARD (极寒雪原·暴风防线)
+    // STAGE 3: ARCTIC BLIZZARD
     // ------------------------------------------------------------------------
     3: {
       id: 3,
       theme: 'arctic',
       bgm: 'arctic',
       name: 'STAGE 3 · ARCTIC BLIZZARD',
-      cnName: '第三关：极寒雪原·暴风防线',
+      cnName: 'ARCTIC BLIZZARD · FROZEN FORTRESS',
       length: 7500,
       bossLockX: 6220,
       bossType: 'gunship',
@@ -282,14 +282,14 @@ window.Contra = window.Contra || {};
     },
 
     // ------------------------------------------------------------------------
-    // STAGE 4: VOLCANIC MAGMA CORE (熔岩地心·烈焰峡谷)
+    // STAGE 4: VOLCANIC MAGMA CORE
     // ------------------------------------------------------------------------
     4: {
       id: 4,
       theme: 'volcano',
       bgm: 'volcano',
       name: 'STAGE 4 · VOLCANIC MAGMA CORE',
-      cnName: '第四关：熔岩地心·烈焰峡谷',
+      cnName: 'VOLCANIC MAGMA CORE · INFERNO CANYON',
       length: 7600,
       bossLockX: 6320,
       bossType: 'magmaDragon',
@@ -362,14 +362,14 @@ window.Contra = window.Contra || {};
     },
 
     // ------------------------------------------------------------------------
-    // STAGE 5: RED FALCON BIO-HIVE (异形母巢·红隼终局)
+    // STAGE 5: RED FALCON BIO-HIVE
     // ------------------------------------------------------------------------
     5: {
       id: 5,
       theme: 'hive',
       bgm: 'hive',
       name: 'FINAL STAGE · RED FALCON BIO-HIVE',
-      cnName: '最终关：异形母巢·红隼终局',
+      cnName: 'RED FALCON BIO-HIVE · FINAL SANCTUM',
       length: 7800,
       bossLockX: 6520,
       bossType: 'emperorGava',
