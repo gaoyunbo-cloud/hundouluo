@@ -12,7 +12,7 @@ const path = require('path');
 const crypto = require('crypto');
 const os = require('os');
 
-const PORT = parseInt(process.env.PORT || process.argv[2] || '8080', 10);
+const PORT = parseInt(process.env.PORT || process.argv[2] || '8888', 10);
 const ROOT_DIR = __dirname;
 const WS_MAGIC = '258EAFA5-E914-47DA-95CA-C5AB0DC85B11';
 
