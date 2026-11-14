@@ -226,18 +226,7 @@ window.Contra = window.Contra || {};
         window.openNetplayLobby();
       }
 
-      // Invisible Hotkey (T): Toggle Realistic Pro-Player Simulation
-      if (ns.input.justPressed('KeyT')) {
-        this.autoPilot = !this.autoPilot;
-        if (this.autoPilot) {
-          this.humanBot.reset();
-          if (this.state === 'title') {
-            this.startNewGame(this.twoPlayers, this.selectedStartStage || 1);
-          }
-        }
-      }
-
-      // Pro-player natural state progression
+      // Pro-player natural state progression (no public hotkey; autoPilot stays off)
       if (this.autoPilot) {
         if (this.state === 'stageIntro' && this.stateTimer < 58) {
           this.state = 'playing';

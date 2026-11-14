@@ -112,9 +112,8 @@
       <div class="transport-bar">
         <label for="transportSelect"><strong>Netplay Transport:</strong></label>
         <select id="transportSelect">
-          <option value="auto">⚡ Auto Select (WebSocket Relay if available / Cloud P2P fallback)</option>
-          <option value="p2p">☁️ Cloud WebRTC P2P Direct (Serverless · 6-Digit Room Code)</option>
-          <option value="ws">🚀 WebSocket Relay Server (100% Symmetric NAT / 5G Traversal)</option>
+          <option value="auto">⚡ Auto Select (recommended · Relay pairing + automatic Direct P2P upgrade)</option>
+          <option value="ws">🚀 WebSocket Relay only (stable · higher latency on long-distance links)</option>
         </select>
         <input id="wsUrlInput" type="text" placeholder="Optional: Custom Relay URL (e.g. wss://xxx.lhr.life/ws)" />
       </div>
@@ -136,7 +135,7 @@
           <input id="joinCodeInput" class="code-input" type="text" inputmode="numeric" maxlength="6" placeholder="6-Digit Code" />
           <button id="btnJoinRoom" class="primary-btn green" type="button">🎮 JOIN ROOM & DEPLOY</button>
           <div style="font-size: 11px; color: #94a3b8; text-align: center;">
-            Tip: Both players should use the same transport mode (Auto/Relay or Cloud P2P).
+            Tip: keep Netplay Transport on Auto Select — it pairs through the relay, then upgrades to a direct P2P link whenever the network allows.
           </div>
         </div>
       </div>
@@ -163,7 +162,7 @@
   <script src="js/entities.js"></script>
   <script src="js/bosses.js"></script>
   <script src="js/player.js"></script>
-  <script src="js/netplay.js"></script>
+  <script src="js/netplay.js?v=20261114a"></script>
   <script src="js/game.js"></script>
 
   <script>
@@ -411,7 +410,8 @@
         var urlRoom = params.get('room');
         var urlMode = params.get('mode');
         var urlWs = params.get('ws');
-        if (urlMode && (urlMode === 'ws' || urlMode === 'p2p' || urlMode === 'auto')) {
+        if (urlMode === 'p2p') urlMode = 'auto';       // legacy links: old P2P-only mode is superseded by Auto
+        if (urlMode && (urlMode === 'ws' || urlMode === 'auto')) {
           transportSelect.value = urlMode;
         }
         if (urlWs) {

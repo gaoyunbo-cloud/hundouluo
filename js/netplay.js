@@ -84,6 +84,15 @@ window.Contra = window.Contra || {};
       this._localSeq = { fs: 0, js: 0, ds: 0, gs: 0, ss: 0 };
       this._lastBgm = null;
       this._pingTimer = null;
+      this._connectTimer = null;
+      this._iceWatch = null;
+
+      // Auto mode: relay pairing first, then try to upgrade to a real direct
+      // WebRTC link (signaling is relayed, so only NAT decides the outcome).
+      this.autoMode = false;
+      this.detectedRelayUrl = '';
+      this._direct = null;        // { pc, channel, timer, pendingIce }
+      this._directActive = false;
     }
 
     bindGame(game) {
@@ -100,6 +109,7 @@ window.Contra = window.Contra || {};
     }
 
     _setStatus(status, text) {
+      if (status === 'error') this._clearConnectTimer();
       this.status = status;
       this.statusText = text;
       if (this.onStatusChange) {
@@ -148,14 +158,19 @@ window.Contra = window.Contra || {};
       if (!this.roomCode || typeof window === 'undefined') return '';
       const url = new URL(window.location.href);
       url.searchParams.set('room', this.roomCode);
-      url.searchParams.set('mode', this.transport);
-      if (this.transport === 'ws' && this.customWsUrl) {
-        url.searchParams.set('ws', this.customWsUrl);
+      url.searchParams.set('mode', this.autoMode ? 'auto' : this.transport);
+      const relayUrl = this.customWsUrl || this.detectedRelayUrl;
+      if (this.transport === 'ws' && relayUrl) {
+        url.searchParams.set('ws', relayUrl);
       }
       return url.toString();
     }
 
     disconnect(reasonText) {
+      this._clearConnectTimer();
+      this._clearIceWatch();
+      this._directActive = false;
+      this._cleanupDirect();
       if (this._pingTimer) {
         clearInterval(this._pingTimer);
         this._pingTimer = null;
@@ -185,15 +200,98 @@ window.Contra = window.Contra || {};
       this._setStatus('offline', reasonText || 'Disconnected');
     }
 
+    _clearConnectTimer() {
+      if (this._connectTimer) {
+        clearTimeout(this._connectTimer);
+        this._connectTimer = null;
+      }
+    }
+
+    _clearIceWatch() {
+      if (this._iceWatch) {
+        clearInterval(this._iceWatch);
+        this._iceWatch = null;
+      }
+    }
+
+    // Fail fast (and with an actionable hint) when NAT traversal is hopeless,
+    // instead of leaving the player on "Connecting..." for the full timeout.
+    _watchP2PIce(conn) {
+      this._clearIceWatch();
+      const startedAt = Date.now();
+      this._iceWatch = setInterval(() => {
+        if (!conn || this.active || this.conn !== conn) {
+          this._clearIceWatch();
+          return;
+        }
+        const pc = conn.peerConnection;
+        const state = pc && pc.iceConnectionState;
+        if (state === 'failed') {
+          this._clearIceWatch();
+          const hint = this.role === 'host'
+            ? 'the partner could not reach you directly (strict NAT). Ask them to retry, or switch Netplay Transport to "Auto Select" to use the WebSocket relay.'
+            : 'your network could not open a direct path to the host (strict NAT). Switch Netplay Transport to "Auto Select" to use the WebSocket relay.';
+          this._setStatus('error', 'P2P direct connection failed — ' + hint);
+          this.conn = null;
+          if (this.peer) { try { this.peer.destroy(); } catch (e) {} this.peer = null; }
+          return;
+        }
+        if (Date.now() - startedAt > 35000) this._clearIceWatch();
+      }, 400);
+    }
+
+    // Safety net: give the player feedback if the relay is unreachable or the
+    // P2P handshake cannot complete. Non-destructive on purpose: a slow
+    // WebRTC/ICE negotiation can still succeed afterwards, and a premature
+    // disconnect() would kill it, so the transport keeps trying in the background.
+    _armConnectTimeout(ms, hint) {
+      this._clearConnectTimer();
+      this._connectTimer = setTimeout(() => {
+        this._connectTimer = null;
+        if (this.active) return;
+        this._setStatus(
+          'error',
+          `Still not connected after ${Math.round(ms / 1000)}s — the network handshake may be slow. ${hint || ''}`.trim()
+        );
+      }, ms);
+    }
+
+    // Guard against the most common lobby mistake: a player who already owns or
+    // joined a room clicks CREATE/JOIN again. That used to silently tear the old
+    // room down, so the two players ended up with mismatched codes and
+    // "peer-unavailable" errors. Now the room is kept and the user gets a hint.
+    _warnAlreadyInRoom() {
+      if (!this.roomCode) return false;
+      if (this.role === 'host') {
+        this._setStatus(
+          'error',
+          `You are already hosting room ${this.roomCode}. Your partner must enter this code on their own device — do not click JOIN on this page. Press DISCONNECT to close this room first.`
+        );
+        return true;
+      }
+      if (this.active) {
+        this._setStatus(
+          'error',
+          `You are already connected to room ${this.roomCode}. Press DISCONNECT first if you want to leave it.`
+        );
+        return true;
+      }
+      return false;
+    }
+
     // ========================================================================
     // Create Room (Host = 1P Bill) & Join Room (Guest = 2P Lance)
     // ========================================================================
     async createRoom(preferredMode, wsUrlOverride) {
+      if (this._warnAlreadyInRoom()) return;
       this.disconnect();
       if (wsUrlOverride !== undefined) this.customWsUrl = wsUrlOverride.trim();
-      const mode = (!preferredMode || preferredMode === 'auto')
-        ? await this.detectBestTransport()
-        : preferredMode;
+      // The old PeerJS-only P2P mode is superseded by Auto (relay pairing +
+      // automatic direct upgrade); treat legacy 'p2p' requests as Auto.
+      const requestedMode = preferredMode === 'p2p' ? 'auto' : preferredMode;
+      const isAuto = (!requestedMode || requestedMode === 'auto');
+      this.autoMode = isAuto;
+      const mode = isAuto ? await this.detectBestTransport() : requestedMode;
 
       this.transport = mode;
       this.role = 'host';
@@ -213,11 +311,16 @@ window.Contra = window.Contra || {};
         return;
       }
 
+      if (this._warnAlreadyInRoom()) return;
+
       this.disconnect();
       if (wsUrlOverride !== undefined) this.customWsUrl = wsUrlOverride.trim();
-      const mode = (!preferredMode || preferredMode === 'auto')
-        ? await this.detectBestTransport()
-        : preferredMode;
+      // The old PeerJS-only P2P mode is superseded by Auto (relay pairing +
+      // automatic direct upgrade); treat legacy 'p2p' requests as Auto.
+      const requestedMode = preferredMode === 'p2p' ? 'auto' : preferredMode;
+      const isAuto = (!requestedMode || requestedMode === 'auto');
+      this.autoMode = isAuto;
+      const mode = isAuto ? await this.detectBestTransport() : requestedMode;
 
       this.transport = mode;
       this.role = 'guest';
@@ -226,7 +329,9 @@ window.Contra = window.Contra || {};
 
       if (mode === 'ws') {
         this._connectWs('join', cleanCode);
+        this._armConnectTimeout(20000, 'Check that the host created the room with the same transport mode and try again.');
       } else {
+        this._armConnectTimeout(30000, 'If this keeps happening, switch Netplay Transport to "Auto Select", or fill in a custom relay URL under the transport selector.');
         await this._joinP2PRoom(cleanCode);
       }
     }
@@ -260,7 +365,7 @@ window.Contra = window.Contra || {};
       };
 
       ws.onerror = () => {
-        if (!this.active) {
+        if (!this.active && this.ws === ws) {
           this._setStatus('error', `WebSocket connection failed (${url}). You can switch to Cloud P2P mode.`);
         }
       };
@@ -307,14 +412,30 @@ window.Contra = window.Contra || {};
         }
         this.conn = conn;
         this._bindP2PConn(conn);
+        this._watchP2PIce(conn);
       });
 
       peer.on('error', (err) => {
-        if (err && err.type === 'unavailable-id') {
+        const type = err && err.type;
+        if (type === 'unavailable-id') {
           this._createP2PRoom();
           return;
         }
-        this._setStatus('error', 'P2P signaling error: ' + (err && err.type ? err.type : 'Connection failed'));
+        if (type === 'peer-unavailable') {
+          // A guest's peer vanished while the WebRTC handshake was in flight
+          // (closed the tab / refreshed / their signaling socket dropped).
+          // Our room is still valid, so keep waiting instead of failing hard.
+          if (this.conn && !this.conn.open) {
+            try { this.conn.close(); } catch (e) {}
+            this.conn = null;
+          }
+          this._setStatus(
+            'waiting',
+            `Room ${this.roomCode || ''} is still open — the partner's connection dropped during the handshake. Ask them to open the invite link again.`
+          );
+          return;
+        }
+        this._setStatus('error', 'P2P signaling error: ' + (type || 'Connection failed'));
       });
     }
 
@@ -326,6 +447,9 @@ window.Contra = window.Contra || {};
         this._setStatus('error', err.message);
         return;
       }
+      // The join attempt may have been cancelled/timed out while the P2P
+      // module was loading - do not create a stale peer in that case.
+      if (this.role !== 'guest' || this.roomCode !== code) return;
 
       const peer = new PeerClass({
         config: { iceServers: ICE_SERVERS }
@@ -333,18 +457,28 @@ window.Contra = window.Contra || {};
       this.peer = peer;
 
       peer.on('open', () => {
-        const conn = peer.connect('contra-ops-hd-' + code, {
-          reliable: true,
-          serialization: 'none'
-        });
+        // PeerJS 1.5.x serializers: raw / json / binary / binary-utf8 / default.
+        // 'none' is not a valid key (it throws "not a constructor" inside connect()),
+        // and this game exchanges plain JSON strings, so 'raw' is the right mode.
+        let conn;
+        try {
+          conn = peer.connect('contra-ops-hd-' + code, {
+            reliable: true,
+            serialization: 'raw'
+          });
+        } catch (err) {
+          this._setStatus('error', `P2P connection failed: ${err && err.message ? err.message : 'unknown error'}`);
+          return;
+        }
         this.conn = conn;
         this._bindP2PConn(conn);
+        this._watchP2PIce(conn);
       });
 
       peer.on('error', (err) => {
         const msg = err && err.type === 'peer-unavailable'
-          ? `Room ${code} not found. Verify host created room in Cloud P2P mode.`
-          : 'P2P connection error: ' + (err && err.type ? err.type : 'Network restricted');
+          ? `Room ${code} not found — the code is wrong or the host's room is closed. Only the host clicks CREATE; ask them for a fresh 6-digit code.`
+          : 'P2P connection error: ' + (err && err.type ? err.type : 'Network restricted') + ' — please retry.';
         this._setStatus('error', msg);
       });
     }
@@ -371,6 +505,10 @@ window.Contra = window.Contra || {};
     // Low-level packet sender across active transport
     _send(obj) {
       const raw = JSON.stringify(obj);
+      const direct = this._direct;
+      if (this._directActive && direct && direct.channel && direct.channel.readyState === 'open') {
+        try { direct.channel.send(raw); return; } catch (e) {}
+      }
       if (this.transport === 'ws' && this.ws && this.ws.readyState === 1) {
         this.ws.send(raw);
       } else if (this.transport === 'p2p' && this.conn && this.conn.open) {
@@ -378,7 +516,152 @@ window.Contra = window.Contra || {};
       }
     }
 
+    // ========================================================================
+    // Relay-assisted direct P2P upgrade (Auto mode)
+    // The relay is always used for pairing; once paired, both browsers open an
+    // RTCPeerConnection and exchange SDP/ICE through the relay. If the direct
+    // link comes up, game data switches to it (low latency); otherwise the
+    // relay keeps carrying the game (slow but reliable).
+    // ========================================================================
+    _startDirectUpgrade() {
+      if (this._direct || this._directActive || typeof RTCPeerConnection === 'undefined') return;
+      const self = this;
+      let pc;
+      try {
+        pc = new RTCPeerConnection({ iceServers: ICE_SERVERS });
+      } catch (e) {
+        return;
+      }
+      const entry = { pc, channel: null, timer: null, pendingIce: [] };
+      this._direct = entry;
+
+      pc.onicecandidate = (ev) => {
+        if (ev.candidate && self.active) {
+          self._send({ t: 'rtc-ice', c: ev.candidate.toJSON ? ev.candidate.toJSON() : ev.candidate });
+        }
+      };
+      pc.onconnectionstatechange = () => {
+        if (pc.connectionState === 'failed') self._abortDirectUpgrade('ice-failed');
+      };
+      pc.ondatachannel = (ev) => self._bindDirectChannel(ev.channel);
+
+      if (this.role === 'guest') {
+        const dc = pc.createDataChannel('game', { ordered: true });
+        this._bindDirectChannel(dc);
+        pc.createOffer()
+          .then((offer) => pc.setLocalDescription(offer))
+          .then(() => {
+            self._send({ t: 'rtc-offer', sdp: pc.localDescription.sdp, type: pc.localDescription.type });
+          })
+          .catch(() => self._abortDirectUpgrade('offer-failed'));
+      }
+
+      entry.timer = setTimeout(() => self._abortDirectUpgrade('timeout'), 12000);
+    }
+
+    _handleDirectSignal(msg) {
+      if (!this._direct) this._startDirectUpgrade();
+      if (!this._direct) return;
+      const pc = this._direct.pc;
+      const entry = this._direct;
+      const self = this;
+
+      const flushIce = () => {
+        const pending = entry.pendingIce.splice(0);
+        pending.forEach((c) => pc.addIceCandidate(c).catch(() => {}));
+      };
+
+      if (msg.t === 'rtc-offer') {
+        pc.setRemoteDescription({ type: 'offer', sdp: msg.sdp })
+          .then(() => { flushIce(); return pc.createAnswer(); })
+          .then((answer) => pc.setLocalDescription(answer))
+          .then(() => {
+            self._send({ t: 'rtc-answer', sdp: pc.localDescription.sdp, type: pc.localDescription.type });
+          })
+          .catch(() => self._abortDirectUpgrade('answer-failed'));
+      } else if (msg.t === 'rtc-answer') {
+        if (pc.signalingState === 'have-local-offer') {
+          pc.setRemoteDescription({ type: 'answer', sdp: msg.sdp })
+            .then(flushIce)
+            .catch(() => self._abortDirectUpgrade('remote-answer-failed'));
+        }
+      } else if (msg.t === 'rtc-ice' && msg.c) {
+        if (pc.remoteDescription && pc.remoteDescription.type) {
+          pc.addIceCandidate(msg.c).catch(() => {});
+        } else {
+          entry.pendingIce.push(msg.c);
+        }
+      }
+    }
+
+    _bindDirectChannel(dc) {
+      if (!this._direct) return;
+      this._direct.channel = dc;
+      const self = this;
+      dc.onopen = () => self._onDirectOpen();
+      dc.onmessage = (ev) => {
+        const data = ev.data;
+        if (typeof data === 'string') self._handleRawMessage(data);
+        else if (data && typeof data === 'object') self._handlePacket(data);
+      };
+      dc.onclose = () => self._onDirectLost();
+      dc.onerror = () => self._onDirectLost();
+      if (dc.readyState === 'open') self._onDirectOpen();
+    }
+
+    _onDirectOpen() {
+      if (this._directActive || !this._direct) return;
+      if (this._direct.timer) {
+        clearTimeout(this._direct.timer);
+        this._direct.timer = null;
+      }
+      this._directActive = true;
+      const roleLabel = this.role === 'host' ? '1P BILL (HOST)' : '2P LANCE (GUEST)';
+      this._setStatus('connected', `Online Co-op Connected! Role: ${roleLabel} · DIRECT P2P (low latency)`);
+    }
+
+    _onDirectLost() {
+      if (!this._directActive) return;
+      this._directActive = false;
+      this._cleanupDirect();
+      if (!this.active) return;
+      const roleLabel = this.role === 'host' ? '1P BILL (HOST)' : '2P LANCE (GUEST)';
+      if (this.ws && this.ws.readyState === 1) {
+        this._setStatus('connected', `Online Co-op Connected! Role: ${roleLabel} · relay fallback (direct link lost)`);
+      } else {
+        this.disconnect('Direct P2P link lost and the relay is unavailable');
+      }
+    }
+
+    _abortDirectUpgrade() {
+      if (!this._direct || this._directActive) return;
+      this._cleanupDirect();
+      if (!this.active) return;
+      const roleLabel = this.role === 'host' ? '1P BILL (HOST)' : '2P LANCE (GUEST)';
+      this._setStatus('connected', `Online Co-op Connected! Role: ${roleLabel} · relay (direct P2P unavailable — NAT)`);
+    }
+
+    _cleanupDirect() {
+      const d = this._direct;
+      this._direct = null;
+      if (!d) return;
+      if (d.timer) {
+        clearTimeout(d.timer);
+        d.timer = null;
+      }
+      if (d.channel) {
+        d.channel.onopen = null;
+        d.channel.onmessage = null;
+        d.channel.onclose = null;
+        d.channel.onerror = null;
+        try { d.channel.close(); } catch (e) {}
+      }
+      try { d.pc.close(); } catch (e) {}
+    }
+
     _onPeerPaired() {
+      this._clearConnectTimer();
+      this._clearIceWatch();
       this.active = true;
       this._ackSeq = { fs: 0, js: 0, ds: 0, gs: 0, ss: 0 };
       this._localSeq = { fs: 0, js: 0, ds: 0, gs: 0, ss: 0 };
@@ -395,6 +678,15 @@ window.Contra = window.Contra || {};
       // Host immediately launches 2-Player Online Co-op Session!
       if (this.role === 'host' && this.game) {
         this.game.startNewGame(true, this.game.selectedStartStage || 1);
+      }
+
+      // Auto mode: relay pairing succeeded - try to upgrade to a real direct
+      // link. Signaling rides on the relay, so only NAT decides the outcome.
+      if (this.autoMode && this.transport === 'ws') {
+        const self = this;
+        setTimeout(() => {
+          if (self.active && !self._directActive) self._startDirectUpgrade();
+        }, 300);
       }
     }
 
@@ -459,6 +751,13 @@ window.Contra = window.Contra || {};
           }
           break;
 
+        case 'rtc-offer':
+        case 'rtc-answer':
+        case 'rtc-ice':
+          // Relay-assisted direct P2P upgrade signaling.
+          this._handleDirectSignal(msg);
+          break;
+
         case 'c':
           // Quick Tactical Callout or Co-op Command!
           if (msg.cmd === 'konami' && this.isHost() && this.game) {
@@ -501,11 +800,18 @@ window.Contra = window.Contra || {};
       if (!this.isGuest()) return;
       const inp = ns.input.getLocalPrimaryInput();
 
+      // Edge-triggered actions must be sampled every frame...
       if (inp.firePressed) this._localSeq.fs++;
       if (inp.jumpPressed) this._localSeq.js++;
       if (inp.dashPressed) this._localSeq.ds++;
       if (inp.grenadePressed) this._localSeq.gs++;
       if (inp.swapPressed) this._localSeq.ss++;
+
+      // ...but directional/held state only needs ~30Hz. Coalescing halves the
+      // relay traffic (important for the Cloudflare relay request quota) while
+      // keeping action latency at <= one frame.
+      this._inputFrameCounter = (this._inputFrameCounter || 0) + 1;
+      if (this._inputFrameCounter % 2 !== 0) return;
 
       this._send({
         t: 'i',
