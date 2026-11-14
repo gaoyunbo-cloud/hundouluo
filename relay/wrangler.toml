@@ -1,0 +1,19 @@
+# Cloudflare Worker + Durable Object WebSocket relay for
+# CONTRA: SHATTERED OPS HD online co-op.
+#
+# Deploy with:  npx wrangler deploy
+# The Worker URL will look like:
+#   wss://shattered-ops-relay.<your-subdomain>.workers.dev/ws
+# Put that URL into DEFAULT_RELAY_WS in js/netplay.js (and re-deploy Pages).
+
+name = "shattered-ops-relay"
+main = "src/index.js"
+compatibility_date = "2026-01-01"
+
+[[durable_objects.bindings]]
+name = "RELAY"
+class_name = "RelayRoom"
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["RelayRoom"]

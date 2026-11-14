@@ -264,6 +264,19 @@ function handleClientMessage(client, payloadBuf) {
 
   if (msg.t === 'leave') {
     cleanupClient(client);
+    return;
+  }
+
+  // Paired players: forward anything else verbatim (e.g. WebRTC SDP/ICE for
+  // the relay-assisted direct-P2P upgrade). Game packets normally take the
+  // fast path above; this is the fallback for new packet types.
+  if (client.roomCode) {
+    const room = rooms.get(client.roomCode);
+    if (!room) return;
+    const peer = client.role === 'host' ? room.guest : room.host;
+    if (peer && !peer.closed) {
+      sendRawText(peer, payloadBuf);
+    }
   }
 }
 
